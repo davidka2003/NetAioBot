@@ -1,0 +1,195 @@
+{
+    "profiles":{
+        "profile 1": {
+        "firstName":"David",
+        "lastName":"Paley",
+        "cardNumber":"0000 0000 0000 0000",
+        "cardHolderName":"David",
+        "month":"7",
+        "year":"2000",
+        "cvv":"000",
+        "country":"US",
+        "province":"DE",
+        "postCode":"19720",
+        "email":"d4v1ds0n.p@gmail.com",
+        "address1":"600 Centerpoint Blvd",
+        "address2":"Qwintry Ste 2164061",
+        "city":"New Castle",
+        "phone":"8586336353",
+        "password":"Dav20030204"
+    },
+    "kicks": {
+        "firstName":"David",
+        "lastName":"Paley",
+        "cardNumber":"0000 0000 0000 0000",
+        "cardHolderName":"David",
+        "month":"7",
+        "year":"2000",
+        "cvv":"000",
+        "country":"US",
+        "province":"DE",
+        "postCode":"19720",
+        "email":"d4v1ds0n.p@gmail.com",
+        "address1":"600 Centerpoint Blvd",
+        "address2":"Qwintry Ste 2164061",
+        "city":"Historic New Castle",
+        "phone":"8586336353",
+        "password":"Dav20030204"
+    },
+    "profile 2":{
+        "firstName":"David",
+        "lastName":"Paley",
+        "cardNumber":"0000 0000 0000 0000",
+        "cardHolderName":"David",
+        "month":"7",
+        "year":"2000",
+        "cvv":"000",
+        "country":"Russia",
+        "province":"SPE",
+        "postCode":"197373",
+        "email":"d4v1ds0n.p@gmail.com",
+        "address1":"Komendantskiy prospekt, 34 1",
+        "address2":"605",
+        "city":"Saint Petersburg",
+        "phone":"89119606989",
+        "password":"Dav20030204"
+    }},
+    "sites":{
+        "https://nrml.ca":{
+            "extraHeaders":{
+                "checkout[pick_up_in_store][selected]":false,
+                "checkout[id]": "delivery-shipping"
+                },
+            "checkoutGateway":75922051,
+            "available":true,
+            "special":{
+                "productsJson":"/products.json?limit=99999",
+                "timeout":2000,
+                "profileName":"profile 1"
+            }
+        },
+        "https://kith.com":{
+            "extraHeaders":{},
+            "checkoutGateway":128707719,
+            "available":true,
+            "special":{
+                "productsJson":"/products.json?limit=99999",
+                "timeout":2000,
+                "profileName":"profile 1"
+            }
+        },
+        "https://eu.kith.com":{
+            "extraHeaders":{},  
+            "checkoutGateway":11,
+            "available":false,
+            "special":{
+                "productsJson":"/products.json?limit=99999",
+                "timeout":2000,
+                "profileName":"profile 2"
+            }
+        },
+        "https://www.deadstock.ca":{
+            "extraHeaders":{
+                "checkout[shipping_address][company]":""
+            },
+            "checkoutGateway":8308339,
+            "available":true,
+            "special":{
+                "productsJson":"/products.json?limit=99999",
+                "timeout":2000,
+                "profileName":"profile 1"
+            }
+        },
+        "https://packershoes.com":{
+            "extraHeaders":{
+                "checkout[shipping_address][company]":""
+            },
+            "checkoutGateway":3723727,
+            "available":true,
+            "special":{
+                "productsJson":"/products.json?limit=99999",
+                "timeout":2000,
+                "profileName":"profile 2"
+            }
+        },
+        "https://sneakerpolitics.com":{
+            "extraHeaders":{
+                "checkout[shipping_address][company]":""
+            },
+            "checkoutGateway":6692225,
+            "available":true,
+            "special":{
+                "productsJson":"/products.json?limit=99999",
+                "timeout":2000,
+                "profileName":"profile 1"
+            }
+        },
+        "https://shopnicekicks.com":{
+            "extraHeaders":{
+                "checkout[shipping_address][company]":""
+            },
+            "checkoutGateway":6735901,
+            "available":true,
+            "special":{
+                "productsJson":"/products.json?limit=99999",
+                "timeout":2000,
+                "profileName":"kicks"
+            }
+        },
+        "https://bdgastore.com":{
+            "extraHeaders":{
+                "checkout[shipping_address][company]":""
+            },
+            "checkoutGateway":3923843,
+            "available":true,
+            "special":{
+                "productsJson":"/products.json?limit=99999",
+                "timeout":2000,
+                "profileName":"profile 1"
+            }
+        },
+        "https://www.a-ma-maniere.com":{
+            "extraHeaders":{
+                "checkout[shipping_address][company]":""
+            },
+            "checkoutGateway":26102467,
+            "available":true,
+            "special":{
+                "productsJson":"/products.json?limit=99999",
+                "timeout":2000,
+                "profileName":"profile 1"
+            }
+        },
+        "https://www.jimmyjazz.com":{
+            "extraHeaders":{
+                "checkout[shipping_address][company]":""
+            },
+            "checkoutGateway":37105762413,
+            "available":true,
+            "special":{
+                "productsJson":"/products.json?limit=99999",
+                "timeout":2000,
+                "profileName":"profile 1"
+            }
+        }
+    },
+
+    "filter":{
+        "positive":["jordan 3","jordan 4","yeezy slide","dunk","vaporwaffle","jordan 6","jordan x travis","cactus jack","cactusjack","jordan 13","jordan 1"],
+        "negative":["disrupt","mid"]
+    },
+    "AntiCaptchaApiKey":"8dee73cc281bfd9b33b85ab12b71a4d3",
+    "proxy":["http://Seld4v1ds0np:O1u2PlB@134.202.33.23:45785",
+        "http://Seld4v1ds0np:O1u2PlB@181.215.217.212:45785",
+        "http://Seld4v1ds0np:O1u2PlB@185.33.85.137:45785",
+        "http://Seld4v1ds0np:O1u2PlB@191.101.148.187:45785",
+        "http://Seld4v1ds0np:O1u2PlB@64.137.80.162:45785",
+        "http://Seld4v1ds0np:O1u2PlB@102.129.240.104:45785",
+        "http://Seld4v1ds0np:O1u2PlB@50.114.84.243:45785",
+        "http://Seld4v1ds0np:O1u2PlB@154.16.87.102:45785",
+        "http://Seld4v1ds0np:O1u2PlB@181.214.203.171:45785",
+        "http://Seld4v1ds0np:O1u2PlB@191.96.58.241:45785"],
+    "bypassStorageAmount":30,
+    "releaseMode":false
+
+}
