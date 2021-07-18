@@ -38,7 +38,7 @@ export interface ProfileInterface{
     month?:string,
     year?:string,
     cvv?:string,
-    phone?:string
+    phone?:string,
 }
 export interface ContextPattern{
     profiles?:{

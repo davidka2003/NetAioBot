@@ -79,6 +79,10 @@ const AddProfiles = () => {
                     <input onChange={handleChange} value={profile.city} type="text" className="form-control" name="city" placeholder="Город" required />
                     </div>
                     <div className="col-3">
+                    <label htmlFor="phone" className="form-label">Телефон <span className="text-muted" /></label>
+                    <input onChange={handleChange} value={profile.phone} type="text" className="form-control" name="phone" placeholder="Телефон" required />
+                    </div>
+                    <div className="col-3">
                     <label htmlFor="country" className="form-label">Страна <span className="text-muted" /></label>
                     <input onChange={handleChange} value={profile.country} type="text" className="form-control" name="country" placeholder="Страна" required />
                     </div>

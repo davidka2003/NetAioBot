@@ -291,7 +291,7 @@ class Checkout{
             'checkout[shipping_address][country]':profile.country,
             'checkout[shipping_address][province]':profile.province,
             'checkout[shipping_address][zip]':profile.postCode,
-            'checkout[shipping_address][phone]':/* profile.phone */"8586336353",
+            'checkout[shipping_address][phone]':profile.phone,
             'checkout[client_details][browser_width]': getRandomInt(500,2000),
             'checkout[client_details][browser_height]': getRandomInt(300,1000),
             'checkout[client_details][javascript_enabled]': 1,

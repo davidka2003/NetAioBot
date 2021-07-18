@@ -127,6 +127,9 @@ const Profiles = () => {
                             <div className="col-3">
                             <label htmlFor="city" className="form-label">Город <span className="text-muted" /></label>
                             <input onChange={handleChange} value={edit?.city} type="text" className="form-control" id="city" required />
+                            </div>                            <div className="col-3">
+                            <label htmlFor="phone" className="form-label">Телефон <span className="text-muted" /></label>
+                            <input onChange={handleChange} value={edit?.phone} type="text" className="form-control" id="phone" required />
                             </div>
                             <div className="col-3">
                             <label htmlFor="country" className="form-label">Страна <span className="text-muted" /></label>
