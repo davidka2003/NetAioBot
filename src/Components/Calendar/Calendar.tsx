@@ -1,5 +1,6 @@
 const request = require('cloudscraper')
 import React, { useEffect,useState } from 'react'
+import './scss/calendar.global.scss'
 // let defaultItems = request.get("https://sneakernews.com/wp-admin/admin-ajax.php?action=release_date_load_more&nextpage=0&category_name=sneaker-release&start_from=0",{
 //   headers:request.defaultParams.headers
 // }).then(
@@ -44,7 +45,7 @@ const Calendar = () => {
     },[])
     return (
 <div className="tab-pane fade" id="v-pills-calendar" role="tabpanel" aria-labelledby="v-pills-calendar-tab">
-  <div className="container text-light">
+  <div className="container">
     <div className="row g-4">
       {/* <div className="col-4">
         <div className="p-3 custom-corners">
@@ -62,7 +63,7 @@ const Calendar = () => {
         </div>
       </div> */}
       {items.map((element:any)=>      <div className="col-4">
-        <div className="p-3 custom-corners">
+        <div className="p-3 custom-corners custom_card">
           <img src={element.img} className="rounded calendarImg" alt="..." />
           <div className="container">
             <h3 id="date">{element.date}</h3>

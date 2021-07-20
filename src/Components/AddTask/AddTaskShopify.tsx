@@ -15,7 +15,7 @@ const AddTaskShopify = () => {
             case "positive":
                 currentTask.positive = event.target.value.split("|")
                 break;
-        
+
             case "negative":
                 currentTask.negative = event.target.value.split("|")
                 break;
@@ -53,24 +53,24 @@ const AddTaskShopify = () => {
 
     }
     return (
-        <div className="container row"> 
+        <div className="container row">
             <div className="container col-1" />
                 <div className="container col-10">
                     <form onSubmit={handlerCreate} className="needs-validation" id="createTaskForm">
                         <div className="row g-6">
-                        <h2 className="text-light text-center">Shopify</h2>
-                        <h4 className="text-light">Фильтры</h4>
+                        <h2 className=" text-center">Shopify</h2>
+                        <h4 className="">Фильтры</h4>
                         <div className="col">
-                            <label htmlFor="positive" className="form-label text-light">Positive</label>
-                            <input onChange={handleChange} value={task?.positive?.join("|")} type="text" className="form-control" id="positive" required />
+                            <label htmlFor="positive" className="form-label ">Positive</label>
+                            <input onChange={handleChange} value={task?.positive?.join("|")} type="text" className="net_input" id="positive" required />
                         </div>
                         <div className="col">
-                            <label htmlFor="negative" className="form-label text-light">Negative</label>
-                            <input onChange={handleChange} value={task?.negative?.join("|")} type="text" className="form-control" id="negative" required />
+                            <label htmlFor="negative" className="form-label ">Negative</label>
+                            <input onChange={handleChange} value={task?.negative?.join("|")} type="text" className="net_input" id="negative" required />
                         </div>
                         </div>
                         <br />
-                        <div className="col text-light">
+                        <div className="col ">
                         <div className="form-check form-switch">
                             <input className="form-check-input" type="checkbox" checked = {task?.checked}onChange={handleChange} name="flexRadioDefault" id="isCustomSizes" data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" />
                             <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Использовать кастомные размеры</label>
@@ -86,7 +86,7 @@ const AddTaskShopify = () => {
                                             <label className="form-check-label" htmlFor={size +'us'}>
                                                 {size} us
                                             </label>
-                                            </div>            
+                                            </div>
                                         )
                                     })
                                 }
@@ -96,14 +96,14 @@ const AddTaskShopify = () => {
                         </div>
                         <br />
                         <div className="row g-3">
-                        <h4 className="text-light">Настройки</h4>
+                        <h4 className="">Настройки</h4>
                         <div className="col">
-                            <label htmlFor="number" className="form-label text-light">Кол-во тасков</label>
-                            <input onChange={handleChange} value={task?.__taskNumber} type="number" min="1" max="100" className="form-control" id="__taskNumber" required />
+                            <label htmlFor="number" className="form-label ">Кол-во тасков</label>
+                            <input onChange={handleChange} value={task?.__taskNumber} type="number" min="1" max="100" className="net_input" id="__taskNumber" required />
                         </div>
-                        <div className="col"> 
-                            <label htmlFor="profile" className="form-label text-light">Профиль</label>
-                            <select value={task?.profile} onChange={handleChange} className="form-select" id="profile" required>
+                        <div className="col">
+                            <label htmlFor="profile" className="form-label ">Профиль</label>
+                            <select value={task?.profile} onChange={handleChange} className="net_select" id="profile" required>
                             <option >Выбрать...</option>
                             {
                                 Object.keys(profiles||{})?.map((profile,index)=>{
@@ -115,36 +115,36 @@ const AddTaskShopify = () => {
                             </select>
                         </div>
                         <div className="col">
-                            <label htmlFor="mode" className="form-label text-light">Режим</label>
-                            <select value={task?.mode} onChange={handleChange} className="form-select" id="mode" required>
+                            <label htmlFor="mode" className="form-label ">Режим</label>
+                            <select value={task?.mode} onChange={handleChange} className="net_select" id="mode" required>
                             <option>Выбрать...</option>
                             <option>release</option>
                             <option>24/7</option>
                             </select>
                         </div>
                         <div className="col">
-                            <label htmlFor="proxyProfile" className="form-label text-light">Прокси</label>
-                            <select className="form-select" id="proxyProfile" required>
+                            <label htmlFor="proxyProfile" className="form-label ">Прокси</label>
+                            <select className="net_select" id="proxyProfile" required>
                             <option>Выбрать...</option>
                             <option>Профиль 1</option>
                             <option>Профиль 2</option>
                             </select>
                         </div>
                         <div className="col">
-                            <label htmlFor="checkoutsAmount" className="form-label text-light">Checkouts per task amount</label>
-                            <input onChange={handleChange} value={task?.checkoutsAmount} type="number" min="1" max="100" className="form-control" id="checkoutsAmount" required />
+                            <label htmlFor="checkoutsAmount" className="form-label ">Checkouts per task amount</label>
+                            <input onChange={handleChange} value={task?.checkoutsAmount} type="number" min="1" max="100" className="net_input" id="checkoutsAmount" required />
                         </div>
                         <div className="col">
-                            <label htmlFor="retryOnFailure" className="form-label text-light">Retry on failure</label>
+                            <label htmlFor="retryOnFailure" className="form-label ">Retry on failure</label>
                             <input onChange={handleChange} checked={task?.retryOnFailure} type="checkbox" className="form-check-input" id="retryOnFailure" />
                         </div>
                         </div>
                         <br />
                         <div className="form-check form-switch">
                         <input className="form-check-input" type="checkbox" id="automaticMode" />
-                        <label className="form-check-label text-light" htmlFor="automaticModeSwitch">Автоматический режим 
-                            <button className="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#automaticModeInfo">
-                            <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" className="bi bi-info-lg" viewBox="0 0 16 16">
+                        <label className="form-check-label " htmlFor="automaticModeSwitch">Автоматический режим
+                            <button className="icon_button" data-bs-toggle="modal" data-bs-target="#automaticModeInfo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} className="bi bi-info-lg" viewBox="0 0 16 16">
                                 <path d="m10.277 5.433-4.031.505-.145.67.794.145c.516.123.619.309.505.824L6.101 13.68c-.34 1.578.186 2.32 1.423 2.32.959 0 2.072-.443 2.577-1.052l.155-.732c-.35.31-.866.434-1.206.434-.485 0-.66-.34-.536-.939l1.763-8.278zm.122-3.673a1.76 1.76 0 1 1-3.52 0 1.76 1.76 0 0 1 3.52 0z" />
                             </svg>
                             </button>
@@ -160,18 +160,18 @@ const AddTaskShopify = () => {
                             <div className="modal-body">
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Понятно</button>
+                                <button type="button" className="net_button_primary" data-bs-dismiss="modal">Понятно</button>
                             </div>
                             </div>
                         </div>
                         </div>
                         <br />
-                        <button className="btn btn-primary" id="saveNewTaskButton">Сохранить</button>
-                        <br />  
+                        <button className="net_button_primary" id="saveNewTaskButton">Сохранить</button>
+                        <br />
                     </form>
                 </div>
             <div className="container col-1" />
-        </div> 
+        </div>
 
     )
 }

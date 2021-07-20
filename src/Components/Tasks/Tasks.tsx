@@ -13,7 +13,7 @@ const Tasks = () => {
   const [edit, setedit] = useState<ShopifyTaskInterface>({isCustomSizes:false,__taskNumber:1,sizes:{}})
   const editTask = (id:string)=>{
     setedit({...tasks}[id])
-    
+
   }
   let saveEdited = (event:FormEvent)=>{
     event.preventDefault()
@@ -70,8 +70,8 @@ const Tasks = () => {
   }
   return (
       <div className="tab-pane fade show active" id="v-pills-tasks" role="tabpanel" aria-labelledby="v-pills-tasks-tab">
-        <div className="container ">           
-          <table className="table table-striped text-light">
+        <div className="container ">
+          <table className="table table-striped">
             <thead>
               <tr>
                 <th>Категория</th>
@@ -90,9 +90,9 @@ const Tasks = () => {
             </tbody>
           </table>
           {}
-          <button onClick={handleStartAll} className = 'btn btn-success btn-md text-light' id = 'startAllTasks' >Старт</button>
-          <button onClick={handleStopAll} className = 'btn btn-danger btn-md' id = 'stopAllTasks'>Стоп</button>
-          <button onClick={handleDeleteAll} className = 'btn btn-primary btn-md' id = 'throwoffAllTasks'>Сбросить</button>
+          <button onClick={handleStartAll} className = 'net_button_success tasks_buttons' id = 'startAllTasks' >Старт</button>
+          <button onClick={handleStopAll} className = 'net_button_danger tasks_buttons' id = 'stopAllTasks'>Стоп</button>
+          <button onClick={handleDeleteAll} className = 'net_button_secondary tasks_buttons' id = 'throwoffAllTasks'>Сбросить</button>
         </div>
         <div className="modal fade" id="EditShopifyTask" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
           <div className="modal-dialog modal-lg modal-dialog-centered">
@@ -139,7 +139,7 @@ const Tasks = () => {
                                             <label className="form-check-label" htmlFor={size +'us'}>
                                                 {size} us
                                             </label>
-                                            </div>            
+                                            </div>
                                         )
                                     })
                                 }
@@ -178,11 +178,11 @@ const Tasks = () => {
                   </div>
                   <br />
                   <button className="btn btn-primary" id="editShopifyTaskButton">Сохранить изменения</button>
-                  <br />  
+                  <br />
                 </form>
               </div>
             </div>
-          </div>      
+          </div>
           </div>
       </div>
   )

@@ -1,0 +1,15 @@
+$light_secondary_bg_col: rgb(241, 241, 241);
+$light_bg_col: white;
+$net_shadow: #a4a4a4;
+
+$default_border_radius: 13px;
+
+body{
+  background: $light_bg_col;
+}
+.card{
+  margin-bottom: 20px;
+  border-radius: $default_border_radius;
+  // background-color: $light_secondary_bg_col;
+  box-shadow: 0px 8px 10px $net_shadow;
+}
