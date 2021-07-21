@@ -1,3 +1,14 @@
-.tasks_buttons{
-  margin-right: 5px;
+$secondary_color_light: #a4a4a4;
+
+.task_buttons_container{
+  width: 100%;
+  position: fixed;
+  background-color: white;
+  z-index: 3;
+  bottom: 0px;
+  .tasks_buttons{
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 }

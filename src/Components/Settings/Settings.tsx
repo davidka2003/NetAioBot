@@ -25,7 +25,7 @@ const Settings = () => {
               <button className="net_button_primary" id="saveSettings">Сохранить</button>
             </div>
             <div className="footer">
-              <button className="net_button_danger" id="logout">Logout</button>
+              <button className="net_button_danger logout_button" id="logout">Logout</button>
             </div>
           </div>
         </div>
