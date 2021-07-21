@@ -69,8 +69,7 @@ const AddTaskShopify = () => {
                             <input onChange={handleChange} value={task?.negative?.join("|")} type="text" className="net_input" id="negative" required />
                         </div>
                         </div>
-                        <br />
-                        <div className="col ">
+                        <div className="col mb-4">
                         <div className="form-check form-switch">
                             <input className="form-check-input" type="checkbox" checked = {task?.checked}onChange={handleChange} name="flexRadioDefault" id="isCustomSizes" data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" />
                             <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Использовать кастомные размеры</label>
@@ -94,14 +93,13 @@ const AddTaskShopify = () => {
                             </div>
                         </div>
                         </div>
-                        <br />
                         <div className="row g-3">
                         <h4 className="">Настройки</h4>
-                        <div className="col">
+                        <div className="col-4">
                             <label htmlFor="number" className="form-label ">Кол-во тасков</label>
                             <input onChange={handleChange} value={task?.__taskNumber} type="number" min="1" max="100" className="net_input" id="__taskNumber" required />
                         </div>
-                        <div className="col">
+                        <div className="col-4">
                             <label htmlFor="profile" className="form-label ">Профиль</label>
                             <select value={task?.profile} onChange={handleChange} className="net_select" id="profile" required>
                             <option >Выбрать...</option>
@@ -114,7 +112,7 @@ const AddTaskShopify = () => {
                             }
                             </select>
                         </div>
-                        <div className="col">
+                        <div className="col-4">
                             <label htmlFor="mode" className="form-label ">Режим</label>
                             <select value={task?.mode} onChange={handleChange} className="net_select" id="mode" required>
                             <option>Выбрать...</option>
@@ -122,7 +120,7 @@ const AddTaskShopify = () => {
                             <option>24/7</option>
                             </select>
                         </div>
-                        <div className="col">
+                        <div className="col-4">
                             <label htmlFor="proxyProfile" className="form-label ">Прокси</label>
                             <select className="net_select" id="proxyProfile" required>
                             <option>Выбрать...</option>
@@ -130,18 +128,20 @@ const AddTaskShopify = () => {
                             <option>Профиль 2</option>
                             </select>
                         </div>
-                        <div className="col">
+                        <div className="col-4">
                             <label htmlFor="checkoutsAmount" className="form-label ">Checkouts per task amount</label>
                             <input onChange={handleChange} value={task?.checkoutsAmount} type="number" min="1" max="100" className="net_input" id="checkoutsAmount" required />
                         </div>
-                        <div className="col">
+                        <div className='col-4'>
+
+                        </div>
+                        </div>
+                        <div className="">
+                            <input onChange={handleChange} checked={task?.retryOnFailure} type="checkbox" className="net_checkbox" id="retryOnFailure" />
                             <label htmlFor="retryOnFailure" className="form-label ">Retry on failure</label>
-                            <input onChange={handleChange} checked={task?.retryOnFailure} type="checkbox" className="form-check-input" id="retryOnFailure" />
                         </div>
-                        </div>
-                        <br />
-                        <div className="form-check form-switch">
-                        <input className="form-check-input" type="checkbox" id="automaticMode" />
+                        <div className="">
+                        <input className="net_checkbox" type="checkbox" id="automaticMode" />
                         <label className="form-check-label " htmlFor="automaticModeSwitch">Автоматический режим
                             <button className="icon_button" data-bs-toggle="modal" data-bs-target="#automaticModeInfo">
                             <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} className="bi bi-info-lg" viewBox="0 0 16 16">

@@ -60,3 +60,31 @@ $primary_input_background_color: #6E6E6E;
   }
 
 }
+
+.net_checkbox{
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  border-radius: 10%;
+  width: 16px;
+  height: 16px;
+
+  border: 2px solid $primary_input_background_color;
+  transition: 0.1s all linear;
+  margin-right: 5px;
+  margin-left: 0;
+  background-color: white;
+
+  position: relative;
+  top: 15px;
+  &:checked {
+    border-radius: 30%;
+    border: 6px solid $primary_color;
+    box-shadow: 0 0 3px $primary_color;
+
+  }
+}
+
+
