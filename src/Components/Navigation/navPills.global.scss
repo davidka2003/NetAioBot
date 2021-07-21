@@ -22,6 +22,8 @@ $primary_input_background_color: #6E6E6E;
   }
 }
 .nav{
+  margin-top: 0%;
+  position: fixed;
   .active{
     border-top-left-radius: $default_border_radius;
     border-bottom-left-radius: $default_border_radius;
@@ -36,6 +38,10 @@ $primary_input_background_color: #6E6E6E;
     // -moz-box-shadow: 10px 8px 28px 4px $primary_color;
     // box-shadow: 10px 8px 28px 4px $primary_color;
   }
+}
+
+.tab-content{
+  margin-left: 210px;
 }
 
 
