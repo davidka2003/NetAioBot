@@ -10,7 +10,7 @@ const Tasks = () => {
   const dispatch = useDispatch()
   const tasks = useSelector((state:any)=>state.tasks)
 
-  const [edit, setedit] = useState<ShopifyTaskInterface>({isCustomSizes:false,__taskNumber:1,sizes:{}})
+  const [edit, setedit] = useState<ShopifyTaskInterface>({isCustomSizes:false,__taskNumber:1,sizes:{},isRun:false,retryOnFailure:false,checkoutsAmount:1,shop:'shopify'})
   const editTask = (id:string)=>{
     setedit({...tasks}[id])
 
@@ -39,11 +39,11 @@ const Tasks = () => {
         currentTask.profile=event.target.value
         break
       case "retryOnFailure":
-          currentTask.retryOnFailure = event.target.checked
-          break
+        currentTask.retryOnFailure = event.target.checked
+        break
       case "checkoutsAmount":
-          currentTask.checkoutsAmount = parseInt(event.target.value)
-          break
+        currentTask.checkoutsAmount = parseInt(event.target.value)
+        break
       case "__taskNumber":
         currentTask.__taskNumber = parseInt(event.target.value)
         break
@@ -52,7 +52,7 @@ const Tasks = () => {
         break;
     }
     setedit(currentTask)
-    // console.log(task)
+    console.log(edit)
 
   }
   const handleStartAll = ()=>{
@@ -118,15 +118,15 @@ const Tasks = () => {
                   </div>
                   <br />
                   <div className="col">
-                    <div className="form-check">
+                    {/* <div className="form-check">
                       <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" defaultChecked />
                       <label className="form-check-label" htmlFor="flexRadioDefault1">
                         Все размеры
                       </label>
-                    </div>
-                    <div className="form-check">
-                      <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" data-bs-toggle="collapse" href="#editSize" role="button" aria-expanded="false" aria-controls="editSize" />
-                      <label className="form-check-label" htmlFor="flexRadioDefault2">
+                    </div> */}
+                    <div className="form-check form-switch">
+                      <input className="form-check-input" type="checkbox" checked={edit.isCustomSizes} onChange={changeHandler} name="flexRadioDefault" id="isCustomSizes" data-bs-toggle="collapse" href="#editSize" role="button" aria-expanded="false" aria-controls="editSize" />
+                      <label className="form-check-label" htmlFor="isCustomSizes">
                         Кастомные размеры
                       </label>
                     </div>

@@ -15,6 +15,7 @@ const getTasks = ():any=>{
     Object.keys(tasks).filter(task=>tasks[task].shop=='shopify').forEach(taskId=>shopifyTasks = {...shopifyTasks,[taskId]:tasks[taskId]})
     return shopifyTasks
 }
+// const getSettings = ()=>store.getState().settings
 const getProfile = (profile:string):ProfileInterface=>store.getState().profiles[profile]
 const editCheckoutState = (taskId:string,state:{level: "LOW" | "ERROR" | "SUCCESS",state:string})=>store.dispatch({type:EDIT_CHECKOUT_STATE,payload:{taskId,message:state}})
 const KeySwap = (response:any)=>{
@@ -97,7 +98,7 @@ class BypassQueueLink{
             })/* .catch((e:any)=>console.log(e)) */
         return this.RemoveFromCart()
     }
-    async RemoveFromCart(){
+    async RemoveFromCart():Promise<any>{
         request.post(`${this.url}/cart/change.js`,{
             headers: {
             ...request.defaultParams.headers,
@@ -170,6 +171,7 @@ class Checkout{
                     console.log(JSON.parse(e.error).description)
                     /* Dispatch this error */
                     editCheckoutState(this.taskId,{level:"ERROR",state:JSON.parse(e.error).description})
+                    if (getTasks()[this.taskId].retryOnFailure) return this.AddToCart()
                     this.Stop=true
                 }
         });
@@ -202,7 +204,9 @@ class Checkout{
                 switch (true) {
                     case this.checkoutUrl.includes("stock_problems"):
                         console.log("stock_problems")
-                        return await this.AddToCart()
+                        if (getTasks()[this.taskId].retryOnFailure) return this.AddToCart()
+                        return
+                        // return await this.AddToCart()
                         // break;
                     case this.checkoutUrl.includes("login"):
                         console.log("login")
@@ -237,7 +241,7 @@ class Checkout{
                                   form:form,
                                   followAllRedirects:true,
                                   resolveWithFullResponse: true               
-                            }).then((r:any)=>{console.log(r.statusCode);this.checkoutUrl  = r.request.href})
+                            }).then((r:any)=>{console.log(r.statusCode);this.checkoutUrl = r.request.href})
                             .catch((e:any)=>console.log(e))
                         }
                         break;                    
@@ -259,7 +263,8 @@ class Checkout{
                         break;                    
                     case this.checkoutUrl.includes("cart"):
                         console.log("cart")
-                        return await this.AddToCart()
+                        if (getTasks()[this.taskId].retryOnFailure) return this.AddToCart()
+                        return
                
                     default:
                         console.log(this.checkoutUrl)
@@ -273,7 +278,7 @@ class Checkout{
             return await this.ShippingConfirm()
 
     }
-    async ShippingConfirm(){
+    async ShippingConfirm():Promise<any>{
         if (this.stop) return//**dispatch error state */
         const profile = getProfile(this.profile)
         let form = {
@@ -335,7 +340,11 @@ class Checkout{
             jar:this.cookieJar,
         }).catch((e:any)=>console.log(e));
         // ship = JSON.parse(ship);
-        if(ship.shipping_rates.length == 0){console.log("Unavailable to ship")}
+        if(!ship?.shipping_rates.length){
+            console.log("Unavailable to ship")
+            if (getTasks()[this.taskId].retryOnFailure) return this.ShippingConfirm()
+            return
+        }
         let ship_opt = ship["shipping_rates"][0]["name"]
         let ship_prc = ship["shipping_rates"][0]["price"]
         let ship_src = ship["shipping_rates"][0]["source"]

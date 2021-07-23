@@ -10,7 +10,7 @@ export const ADD_CHECKOUT_BYPASS = "ADD_CHECKOUT_BYPASS"
 export const USE_CHECKOUT_BYPASS = "USE_CHECKOUT_BYPASS"
 export const EDIT_ALL_CHECKOUTS_STATE = "EDIT_ALL_CHECKOUTS_STATE"
 export const defaultState = JSON.parse(localStorage.getItem('tasks')!)||{}
-import {ActionType} from './index'
+import {ActionType} from '.'
 export const tasksReducer = (state = defaultState ,action:ActionType)=>{
     let currentState:any
     switch (action.type){

@@ -1,6 +1,7 @@
+import { store } from "../../store";
+
 const ac = require("@antiadmin/anticaptchaofficial");
-// const { AntiCaptchaApiKey } = require("../Setup.json");
-const AntiCaptchaApiKey = localStorage.getItem('AntiCaptchaKey')||"8dee73cc281bfd9b33b85ab12b71a4d3"
+const AntiCaptchaApiKey = store.getState().settings.captchaKey
 const cheerio = require('cheerio');
 ac.setAPIKey(AntiCaptchaApiKey);
 

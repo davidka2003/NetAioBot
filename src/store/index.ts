@@ -1,5 +1,6 @@
 import { combineReducers, createStore } from "redux";
 import { profilesReducer } from "./profilesReducer";
+import { settingsReducer } from "./settingsReducer";
 import { tasksReducer } from "./tasksReducer";
 export interface ActionType {
     type:string,
@@ -7,7 +8,8 @@ export interface ActionType {
 }
 const rootReducer = combineReducers({
     profiles:profilesReducer,
-    tasks:tasksReducer
+    tasks:tasksReducer,
+    settings:settingsReducer
 })
 
 

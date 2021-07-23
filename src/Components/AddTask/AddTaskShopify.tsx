@@ -71,7 +71,7 @@ const AddTaskShopify = () => {
                         </div>
                         <div className="col mb-4">
                         <div className="form-check form-switch">
-                            <input className="form-check-input" type="checkbox" checked = {task?.checked}onChange={handleChange} name="flexRadioDefault" id="isCustomSizes" data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" />
+                            <input className="form-check-input" type="checkbox" checked = {task?.isCustomSizes}onChange={handleChange} name="flexRadioDefault" id="isCustomSizes" data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" />
                             <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Использовать кастомные размеры</label>
                         </div>
                         <div>
