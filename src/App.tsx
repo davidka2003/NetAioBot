@@ -13,6 +13,20 @@ let App = ()=>{
     return (
     <Provider store={store}>
         <div id="App" className="d-flex align-items-start">
+            {/* <div className="area" >
+              <ul className="circles">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+              </ul>
+            </div > */}
             <NavPills/>
             <div className="tab-content col-10" id="v-pills-tabContent">
                 <Tasks/>

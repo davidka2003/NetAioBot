@@ -90,11 +90,14 @@ const Tasks = () => {
             </tbody>
           </table>
           {}
-          <div className='task_buttons_container'>
-            <button onClick={handleStartAll} className = 'net_button_success tasks_buttons' id = 'startAllTasks' >Старт</button>
-            <button onClick={handleStopAll} className = 'net_button_danger tasks_buttons' id = 'stopAllTasks'>Стоп</button>
-            <button onClick={handleDeleteAll} className = 'net_button_secondary tasks_buttons' id = 'throwoffAllTasks'>Сбросить</button>
+          <div className='container'>
+            <div className='task_buttons_container'>
+              <button onClick={handleStartAll} className = 'net_button_success tasks_buttons' id = 'startAllTasks' >Старт</button>
+              <button onClick={handleStopAll} className = 'net_button_danger tasks_buttons' id = 'stopAllTasks'>Стоп</button>
+              <button onClick={handleDeleteAll} className = 'net_button_secondary tasks_buttons' id = 'throwoffAllTasks'>Сбросить</button>
+            </div>
           </div>
+
         </div>
         <div className="modal fade" id="EditShopifyTask" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
           <div className="modal-dialog modal-lg modal-dialog-centered">
