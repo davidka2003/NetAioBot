@@ -1,8 +1,9 @@
 $secondary_color_light: #a4a4a4;
 
 .task_buttons_container{
-  width: 100%;
   position: fixed;
+  width: 100%;
+  overflow-x: hidden;
   background-color: white;
   z-index: 3;
   bottom: 0px;
@@ -12,3 +13,4 @@ $secondary_color_light: #a4a4a4;
     margin-bottom: 10px;
   }
 }
+
