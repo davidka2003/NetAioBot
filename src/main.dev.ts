@@ -24,7 +24,9 @@ export default class AppUpdater {
   }
 }
 
+
 let mainWindow: BrowserWindow | null = null;
+let loginWindow: BrowserWindow | null = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -51,7 +53,7 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
-const createWindow = async () => {
+const createMainWindow = async () => {
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'
@@ -74,10 +76,11 @@ const createWindow = async () => {
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,
+      enableRemoteModule: true
     },
   });
 
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.loadURL(`file://${__dirname}/index.html?viewMain`);
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -85,16 +88,20 @@ const createWindow = async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
-    if (process.env.START_MINIMIZED) {
-      mainWindow.minimize();
-    } else {
-      mainWindow.show();
-      mainWindow.focus();
-    }
+    // if (process.env.START_MINIMIZED) {
+    //   mainWindow.minimize();
+    // } else {
+    //   mainWindow.show();
+    //   mainWindow.focus();
+    // }
+    // mainWindow.hide()
   });
-
-  mainWindow.on('closed', () => {
+  
+  mainWindow.on('closed', (/* event:any */) => {
+    // event?.preventDefault()
+    // logout()/* problems maybe */
     mainWindow = null;
+    app.quit()
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
@@ -108,25 +115,87 @@ const createWindow = async () => {
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
+  // new AppUpdater();
+};
+const createLoginWindow = async () => {
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.DEBUG_PROD === 'true'
+  ) {
+    await installExtensions();
+  }
+
+  const RESOURCES_PATH = app.isPackaged
+    ? path.join(process.resourcesPath, 'assets')
+    : path.join(__dirname, '../assets');
+
+  const getAssetPath = (...paths: string[]): string => {
+    return path.join(RESOURCES_PATH, ...paths);
+  };
+
+  loginWindow = new BrowserWindow({
+    show: false,
+    width: 400,
+    height: 300,
+    icon: getAssetPath('icon.png'),
+    webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: true
+    },
+  });
+
+  loginWindow.loadURL(`file://${__dirname}/index.html?viewLogin`);
+
+  // @TODO: Use 'ready-to-show' event
+  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+  loginWindow.webContents.on('did-finish-load', () => {
+    if (!loginWindow) {
+      throw new Error('"loginWindow" is not defined');
+    }
+    if (process.env.START_MINIMIZED) {
+      loginWindow.minimize();
+    } else {
+      loginWindow.show();
+      loginWindow.focus();
+    }
+  });
+
+  loginWindow.on('closed', () => {
+    app.quit()
+    loginWindow = null;
+  });
+
+  const menuBuilder = new MenuBuilder(loginWindow);
+  menuBuilder.buildMenu();
+
+  // Open urls in the user's browser
+  loginWindow.webContents.on('new-window', (event, url) => {
+    event.preventDefault();
+    shell.openExternal(url);
+  });
+
+  // Remove this if your app does not use auto updates
+  // eslint-disable-next-line
   new AppUpdater();
 };
 
 /**
  * Add event listeners...
  */
-
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   if (process.platform !== 'darwin') {
+    // logout()/* problems maybe */
     app.quit();
   }
 });
 
-app.whenReady().then(createWindow).catch(console.log);
+app.whenReady().then(()=>{createLoginWindow();createMainWindow()}).catch(console.log);
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) createWindow();
+  // if (mainWindow === null) createMainWindow();
+  if (loginWindow === null) createLoginWindow();createMainWindow()
 });
