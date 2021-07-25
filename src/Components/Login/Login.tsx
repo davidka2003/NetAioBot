@@ -46,9 +46,13 @@ const Login = () => {
     return (
         <div>
             <form onSubmit={loginHandler}>
-                <label htmlFor="key">key</label>
-                <input value={key} onChange={(event:ChangeEvent<HTMLInputElement>)=>setkey(event?.target.value)} id="key" type="text" />
-                <button type="submit">Login</button>
+                <div className='container'>
+                <h2>NetAio</h2>
+                  <input className='net_input' placeholder='your key' value={key} onChange={(event:ChangeEvent<HTMLInputElement>)=>setkey(event?.target.value)} id="key" type="text" />
+                  <div className='text-center'>
+                    <button className='net_button_primary' type="submit">Login</button>
+                  </div>
+                </div>
             </form>
         </div>
     )
