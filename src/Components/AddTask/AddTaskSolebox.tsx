@@ -40,7 +40,7 @@ const AddTaskSolebox = () => {
                         sizes.map((size,index)=>{
                             return (
                                 <div className="form-check" key={index}>
-                                <input className="form-check-input" type="checkbox" defaultValue id="4us" />
+                                <input className="form-check-input" type="checkbox" id="4us" />
                                 <label className="form-check-label" htmlFor="4us">
                                     {size} us
                                 </label>
@@ -62,14 +62,14 @@ const AddTaskSolebox = () => {
             <div className="col">
                 <label htmlFor="profile" className="form-label ">Профиль</label>
                 <select className="net_select" id="profile" required>
-                <option value>Выбрать...</option>
+                <option >Выбрать...</option>
                 {/* <option>Профиль 1</option> */}
                 </select>
             </div>
             <div className="col">
                 <label htmlFor="mode" className="form-label ">Режим</label>
                 <select className="net_select" id="mode" required>
-                  <option value>Выбрать...</option>
+                  <option >Выбрать...</option>
                   <option>release</option>
                   <option>24/7</option>
                 </select>
@@ -77,7 +77,7 @@ const AddTaskSolebox = () => {
             <div className="col">
                 <label htmlFor="proxyProfile" className="form-label ">Прокси</label>
                 <select className="net_select" id="proxyProfile" required>
-                <option value>Выбрать...</option>
+                <option >Выбрать...</option>
                 <option>Профиль 1</option>
                 <option>Профиль 2</option>
                 </select>

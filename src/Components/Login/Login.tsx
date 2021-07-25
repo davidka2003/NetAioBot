@@ -35,10 +35,6 @@ const Login = () => {
         }
         else throw new Error("Failed to log in")
     }).catch((e:any)=>console.log(e))
-
-    // useEffect(()=>{
-    //     key.length?login(7000):null
-    // },[])
     const loginHandler = (event:FormEvent)=>{
         event.preventDefault()
         login()
