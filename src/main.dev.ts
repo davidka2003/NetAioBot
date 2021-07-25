@@ -11,11 +11,15 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-
+const fetch = require('node-fetch')
+let KEY = ''
+ipcMain.on('setKey',(_event,args)=>KEY = args)
+ipcMain.on('deleteKey',()=>KEY = '')
+let beforeQuitFlag = true
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -23,6 +27,35 @@ export default class AppUpdater {
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
+app.on('before-quit',(event:Electron.Event)=>{
+  if(beforeQuitFlag){
+    event.preventDefault()
+  }
+  else return
+  fetch("http://localhost:5000/auth/logout", {
+    "headers": {
+        "accept": "*/*",
+        "accept-language": "ru",
+        "content-type": "application/json",
+    },
+    "referrerPolicy": "no-referrer-when-downgrade",
+    "body": JSON.stringify({
+        key:KEY
+    }),
+    "method": "POST",
+    "mode": "cors",
+    "credentials": "omit"
+    })
+    .then((r:any)=>r.json())
+    .then((r:any)=>{
+      if(r.success){
+        beforeQuitFlag = false
+        return app.quit()
+      }
+
+      return
+    }).catch(console.log)
+});
 
 
 let mainWindow: BrowserWindow | null = null;
@@ -97,13 +130,10 @@ const createMainWindow = async () => {
     // mainWindow.hide()
   });
   
-  mainWindow.on('closed', (/* event:any */) => {
-    // event?.preventDefault()
-    // logout()/* problems maybe */
-    mainWindow = null;
+  mainWindow.on('closed',()=>{
     app.quit()
-  });
-
+    mainWindow=null
+  })
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
@@ -159,11 +189,10 @@ const createLoginWindow = async () => {
       loginWindow.focus();
     }
   });
-
-  loginWindow.on('closed', () => {
+  loginWindow.on('closed',()=>{
     app.quit()
-    loginWindow = null;
-  });
+    loginWindow=null
+  })
 
   const menuBuilder = new MenuBuilder(loginWindow);
   menuBuilder.buildMenu();

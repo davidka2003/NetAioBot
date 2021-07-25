@@ -1,4 +1,4 @@
-import { remote } from 'electron'
+import { ipcRenderer, remote } from 'electron'
 import React, { ChangeEvent, FormEvent, useState } from 'react'
 import '../../scss/buttons.global.scss'
 import '../../scss/input.global.scss'
@@ -25,6 +25,7 @@ export const logout = ()=>
         }).then((r:any)=>r.json()).then(r=>{
         if (r.success) {
             localStorage.removeItem("key")
+            ipcRenderer.send('deleteKey')
             let currentWindow = remote.BrowserWindow.getFocusedWindow()
             let windows = remote.BrowserWindow.getAllWindows()
             windows.forEach((window,id)=>id==currentWindow?.id?null:window.show())

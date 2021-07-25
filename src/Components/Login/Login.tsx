@@ -1,13 +1,13 @@
 
+import { ipcRenderer } from 'electron'
 import { remote } from 'electron'
 import React, { ChangeEvent, FormEvent, useEffect,useState } from 'react'
-
 const Login = () => {
     const [key, setkey] = useState(localStorage.getItem("key")||'')
     // let windows = remote.BrowserWindow.getAllWindows()
     // windows.forEach((window,id)=>window.show())
 
-    const login = (timeout=3000)=> 
+    const login = ()=> 
     fetch("http://localhost:5000/auth/login", {
         "headers": {
             "accept": "*/*",
@@ -24,25 +24,24 @@ const Login = () => {
         }).then((r:any)=>r.json()).then(r=>{
         if (r.success) {/* reverse */
             localStorage.setItem("key",key)
-            setTimeout(()=>{
-                console.log("logged in")
-                let currentWindow = remote.BrowserWindow.getFocusedWindow()
-                let windows = remote.BrowserWindow.getAllWindows()
-                windows.forEach((window,id)=>id==currentWindow?.id?null:window.show())
-                currentWindow?.hide()
+            ipcRenderer.send('setKey',key)
+            console.log("logged in")
+            let currentWindow = remote.BrowserWindow.getFocusedWindow()
+            let windows = remote.BrowserWindow.getAllWindows()
+            windows.forEach((window,id)=>id==currentWindow?.id?null:window.show())
+            currentWindow?.hide()
 
-            },timeout)
             // main()
         }
         else throw new Error("Failed to log in")
     }).catch((e:any)=>console.log(e))
 
-    useEffect(()=>{
-        key.length?login(3000):null
-    },[])
+    // useEffect(()=>{
+    //     key.length?login(7000):null
+    // },[])
     const loginHandler = (event:FormEvent)=>{
         event.preventDefault()
-        login(0)
+        login()
     }
     return (
         <div>
