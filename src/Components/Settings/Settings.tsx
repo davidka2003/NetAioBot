@@ -26,6 +26,7 @@ export const logout = ()=>
         if (r.success) {
             localStorage.removeItem("key")
             ipcRenderer.send('deleteKey')
+            ipcRenderer.send('logout')
             let currentWindow = remote.BrowserWindow.getFocusedWindow()
             let windows = remote.BrowserWindow.getAllWindows()
             windows.forEach((window,id)=>id==currentWindow?.id?null:window.show())

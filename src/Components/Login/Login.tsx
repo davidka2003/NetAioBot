@@ -28,6 +28,7 @@ const Login = () => {
         if (r.success) {/* reverse */
             localStorage.setItem("key",key)
             ipcRenderer.send('setKey',key)
+            ipcRenderer.send('login')
             console.log("logged in")
             let currentWindow = remote.BrowserWindow.getFocusedWindow()
             let windows = remote.BrowserWindow.getAllWindows()

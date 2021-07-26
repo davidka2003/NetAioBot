@@ -17,8 +17,6 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 const fetch = require('node-fetch')
 let KEY = ''
-ipcMain.on('setKey',(_event,args)=>KEY = args)
-ipcMain.on('deleteKey',()=>KEY = '')
 let beforeQuitFlag = true
 export default class AppUpdater {
   constructor() {
@@ -121,19 +119,19 @@ const createMainWindow = async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
-    // if (process.env.START_MINIMIZED) {
-    //   mainWindow.minimize();
-    // } else {
-    //   mainWindow.show();
-    //   mainWindow.focus();
-    // }
+    if (process.env.START_MINIMIZED) {
+      mainWindow.minimize();
+    } else {
+      mainWindow.show();
+      mainWindow.focus();
+    }
     // mainWindow.hide()
   });
   
-  mainWindow.on('closed',()=>{
-    app.quit()
-    mainWindow=null
-  })
+  // mainWindow.on('closed',()=>{
+  //   app.quit()
+  //   mainWindow=null
+  // })
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
@@ -189,10 +187,10 @@ const createLoginWindow = async () => {
       loginWindow.focus();
     }
   });
-  loginWindow.on('closed',()=>{
-    app.quit()
-    loginWindow=null
-  })
+  // loginWindow.on('closed',()=>{
+  //   app.quit()
+  //   loginWindow=null
+  // })
 
   const menuBuilder = new MenuBuilder(loginWindow);
   menuBuilder.buildMenu();
@@ -220,11 +218,15 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.whenReady().then(()=>{createLoginWindow();createMainWindow()}).catch(console.log);
+app.whenReady().then(createLoginWindow).catch(console.log);
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   // if (mainWindow === null) createMainWindow();
-  if (loginWindow === null) createLoginWindow();createMainWindow()
+  if (loginWindow === null) createLoginWindow()/* ;createMainWindow() */
 });
+ipcMain.on('setKey',(_event,args)=>KEY = args)
+ipcMain.on('deleteKey',()=>KEY = '')
+ipcMain.on('login',()=>{if(loginWindow)loginWindow.close();createMainWindow()})
+ipcMain.on('logout',()=>{if(mainWindow)mainWindow.close();createLoginWindow()})
