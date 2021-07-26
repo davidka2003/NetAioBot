@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { EDIT_SETTINGS } from '../../store/settingsReducer'
 
 
-export const logout = ()=>    
+export const logout = ()=>
     fetch("http://localhost:5000/auth/logout", {
         "headers": {
             "accept": "*/*",
@@ -70,7 +70,7 @@ const Settings = () => {
             <h2 className="">Settings</h2>
             <h6 className="">Captha Key</h6>
             <input onChange={handleChange} value={settings?.captchaKey} className="net_input" type="text"  id="captchaKey" /* required */ />
-            <button type="submit" className="net_button_primary" id="saveSettings">Сохранить</button>
+            <button type="submit" className="net_button_primary" id="saveSettings">Save</button>
           </form>
           <div className="footer">
             <button onClick={logoutHandler} className="net_button_danger logout_button" id="logout">Logout</button>

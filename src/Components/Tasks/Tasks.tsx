@@ -92,9 +92,9 @@ const Tasks = () => {
           {}
           <div className='container'>
             <div className='task_buttons_container'>
-              <button onClick={handleStartAll} className = 'net_button_success tasks_buttons' id = 'startAllTasks' >Старт</button>
-              <button onClick={handleStopAll} className = 'net_button_danger tasks_buttons' id = 'stopAllTasks'>Стоп</button>
-              <button onClick={handleDeleteAll} className = 'net_button_secondary tasks_buttons' id = 'throwoffAllTasks'>Сбросить</button>
+              <button onClick={handleStartAll} className = 'net_button_success tasks_buttons' id = 'startAllTasks' >Run</button>
+              <button onClick={handleStopAll} className = 'net_button_danger tasks_buttons' id = 'stopAllTasks'>Stop</button>
+              <button onClick={handleDeleteAll} className = 'net_button_secondary tasks_buttons' id = 'throwoffAllTasks'>Reset</button>
             </div>
           </div>
 
