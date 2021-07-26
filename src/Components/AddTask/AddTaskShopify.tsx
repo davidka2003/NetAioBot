@@ -8,6 +8,7 @@ import { sizes } from './AddTask'
 const AddTaskShopify = () => {
     const dispatch = useDispatch()
     const profiles = useSelector((state:any)=>state.profiles)
+    const proxyProfiles = useSelector((state:any)=>state.proxy)
     const [task, settask] = useState<ShopifyTaskInterface>({isCustomSizes:false,sizes:{},__taskNumber:1,checkoutsAmount:1})
     let handleChange = (event:ChangeEvent<HTMLInputElement&/* | */HTMLSelectElement>)=>{
         let currentTask = {...task}
@@ -27,6 +28,9 @@ const AddTaskShopify = () => {
                 break
             case "profile":
                 currentTask.profile=event.target.value
+                break
+            case "proxyProfile":
+                currentTask.proxyProfile=event.target.value
                 break
             case "__taskNumber":
                 currentTask.__taskNumber = parseInt(event.target.value)
@@ -102,7 +106,7 @@ const AddTaskShopify = () => {
                         <div className="col-4">
                             <label htmlFor="profile" className="form-label ">Профиль</label>
                             <select value={task?.profile} onChange={handleChange} className="net_select" id="profile" required>
-                            <option >Выбрать...</option>
+                            <option disabled={true}>Выбрать...</option>
                             {
                                 Object.keys(profiles||{})?.map((profile,index)=>{
                                     return(
@@ -115,17 +119,16 @@ const AddTaskShopify = () => {
                         <div className="col-4">
                             <label htmlFor="mode" className="form-label ">Режим</label>
                             <select value={task?.mode} onChange={handleChange} className="net_select" id="mode" required>
-                            <option>Выбрать...</option>
+                            <option disabled={true}>Выбрать...</option>
                             <option>release</option>
                             <option>24/7</option>
                             </select>
                         </div>
                         <div className="col-4">
                             <label htmlFor="proxyProfile" className="form-label ">Прокси</label>
-                            <select className="net_select" id="proxyProfile" required>
-                            <option>Выбрать...</option>
-                            <option>Профиль 1</option>
-                            <option>Профиль 2</option>
+                            <select value={task?.proxyProfile} onChange={handleChange} className="net_select" id="proxyProfile" required>
+                            <option disabled={true}>Выбрать...</option>
+                            {Object.keys(proxyProfiles).map((profile:string)=><option value={profile}>{profile}</option>)}
                             </select>
                         </div>
                         <div className="col-4">

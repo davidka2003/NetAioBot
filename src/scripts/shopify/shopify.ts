@@ -443,6 +443,7 @@ export class ShopifyMonitor{
         try {
             let response = await request.get(this.url+'/products.json?limit=99999',{json:true}).catch(()=>{})
             let products = KeySwap(response)
+            console.log(Object.keys(products).length)
             let tasks = getTasks()
             if(!Object.keys(tasks).map(task=>tasks[task].isRun).filter(isRun=>isRun).length) return
             // Object.keys(tasks).map(task=>tasks[task].isRun?bypassAmount+=tasks[task].checkoutsAmount:bypassAmount)

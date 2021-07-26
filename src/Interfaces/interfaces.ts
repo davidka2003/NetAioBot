@@ -19,7 +19,8 @@ export interface ShopifyTaskInterface{
     isRun:false,
     retryOnFailure:boolean,
     checkoutsAmount:1|number,
-    shop:"shopify"
+    shop:"shopify",
+    proxyProfile?:string
 }
 
 export interface ProfileInterface{

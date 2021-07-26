@@ -1,5 +1,6 @@
 import { combineReducers, createStore } from "redux";
 import { profilesReducer } from "./profilesReducer";
+import { proxyProfilesReducer } from "./proxyProfilesReducer";
 import { settingsReducer } from "./settingsReducer";
 import { tasksReducer } from "./tasksReducer";
 export interface ActionType {
@@ -9,7 +10,8 @@ export interface ActionType {
 const rootReducer = combineReducers({
     profiles:profilesReducer,
     tasks:tasksReducer,
-    settings:settingsReducer
+    settings:settingsReducer,
+    proxy:proxyProfilesReducer
 })
 
 

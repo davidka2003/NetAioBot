@@ -9,7 +9,9 @@ import Task from './Task'
 const Tasks = () => {
   const dispatch = useDispatch()
   const tasks = useSelector((state:any)=>state.tasks)
-
+  const proxyProfiles = useSelector((state:any)=>state.proxy)
+  const profiles = useSelector((state:any)=>state.profiles)
+  
   const [edit, setedit] = useState<ShopifyTaskInterface>({isCustomSizes:false,__taskNumber:1,sizes:{},isRun:false,retryOnFailure:false,checkoutsAmount:1,shop:'shopify'})
   const editTask = (id:string)=>{
     setedit({...tasks}[id])
@@ -156,7 +158,14 @@ const Tasks = () => {
                   <div className="row g-6">
                     <h5>Настройки</h5>
                     <div className="col">
-                      <label htmlFor="mode" className="form-label">Профиль</label>
+                      <label htmlFor="profile" className="form-label">Profile</label>
+                      <select onChange={changeHandler} value = {edit.profile} className="form-select" id="profile" required>
+                        <option disabled={true}>Выбрать...</option>
+                        {Object.keys(profiles).map((profile:string)=><option value={profile}>{profile}</option>)}
+                      </select>
+                    </div>
+                    <div className="col">
+                      <label htmlFor="mode" className="form-label">Mode</label>
                       <select onChange={changeHandler} value={edit.mode}className="form-select" id="mode" required>
                         <option disabled={true}>Выбрать...</option>
                         <option value="release">release</option>
@@ -164,11 +173,10 @@ const Tasks = () => {
                       </select>
                     </div>
                     <div className="col">
-                      <label htmlFor="mode" className="form-label">Прокси</label>
-                      <select className="form-select" id="mode" required>
-                        <option>Выбрать...</option>
-                        <option>release</option>
-                        <option>24/7</option>
+                      <label htmlFor="mode" className="form-label">Proxy</label>
+                      <select onchange= {changeHandler} value={edit?.proxy} className="form-select" id="mode" required>
+                        <option disabled={true}>Выбрать...</option>
+                        {Object.keys(proxyProfiles).map((profile:string)=><option value={profile}>{profile}</option>)}
                       </select>
                     </div>
                     <div className="col">

@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { ProfileInterface } from '../../Interfaces/interfaces'
 import '../../scss/input.global.scss'
 import '../../scss/buttons.global.scss'
+import { ADD_PROFILE } from '../../store/profilesReducer'
 
 
 const AddProfiles = () => {
@@ -13,7 +14,7 @@ const AddProfiles = () => {
 
     let handleSubmit = (event:FormEvent)=>{
         event.preventDefault()
-        dispatch({type:"ADD_PROFILE",payload:{
+        dispatch({type:ADD_PROFILE,payload:{
             ...profile
         }})
         // let currentprofile = {...profile}

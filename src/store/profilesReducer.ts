@@ -1,8 +1,8 @@
 import { ActionType } from "."
 
-const ADD_PROFILE = "ADD_PROFILE"
-const REMOVE_PROFILE = "REMOVE_PROFILE"
-const EDIT_PROFILE = "EDIT_PROFILE"
+export const ADD_PROFILE = "ADD_PROFILE"
+export const REMOVE_PROFILE = "REMOVE_PROFILE"
+export const EDIT_PROFILE = "EDIT_PROFILE"
 const defaultState = JSON.parse(localStorage.getItem('profiles')!)||{}
 export const profilesReducer = (state = defaultState ,action:ActionType)=>{
     let currentState
