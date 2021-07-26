@@ -228,5 +228,5 @@ app.on('activate', () => {
 });
 ipcMain.on('setKey',(_event,args)=>KEY = args)
 ipcMain.on('deleteKey',()=>KEY = '')
-ipcMain.on('login',()=>{if(loginWindow)loginWindow.close();createMainWindow()})
-ipcMain.on('logout',()=>{if(mainWindow)mainWindow.close();createLoginWindow()})
+ipcMain.on('login',()=>{createMainWindow();if(loginWindow)loginWindow.close();})
+ipcMain.on('logout',()=>{createLoginWindow();if(mainWindow)mainWindow.close();})
