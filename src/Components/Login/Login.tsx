@@ -3,6 +3,7 @@ import { ipcRenderer } from 'electron'
 import { remote } from 'electron'
 import React, { ChangeEvent, FormEvent, useEffect,useState } from 'react'
 import '../Login/login.global.scss'
+import mainLogo from '../../images/logo.svg'
 
 const Login = () => {
     const [key, setkey] = useState(localStorage.getItem("key")||'')
@@ -46,7 +47,8 @@ const Login = () => {
             <form onSubmit={loginHandler}>
               <div className='login'>
                 <div className='login_content'>
-                  <h1>NetAio</h1>
+                  {/* <h1>NetAio</h1> */}
+                  <img src={mainLogo} alt="" />
                   <input className='net_input' placeholder='your key' value={key} onChange={(event:ChangeEvent<HTMLInputElement>)=>setkey(event?.target.value)} id="key" type="text" />
                   <div className='text-center'>
                     <button className='net_button_primary login_button' type="submit">Login</button>

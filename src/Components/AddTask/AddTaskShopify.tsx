@@ -63,7 +63,7 @@ const AddTaskShopify = () => {
                     <form onSubmit={handlerCreate} className="needs-validation" id="createTaskForm">
                         <div className="row g-6">
                         <h2 className=" text-center">Shopify</h2>
-                        <h4 className="">Фильтры</h4>
+                        <h4 className="">Filters</h4>
                         <div className="col">
                             <label htmlFor="positive" className="form-label ">Positive</label>
                             <input onChange={handleChange} value={task?.positive?.join("|")} type="text" className="net_input" id="positive" required />
@@ -76,7 +76,7 @@ const AddTaskShopify = () => {
                         <div className="col mb-4">
                         <div className="form-check form-switch">
                             <input className="form-check-input" type="checkbox" checked = {task?.isCustomSizes}onChange={handleChange} name="flexRadioDefault" id="isCustomSizes" data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" />
-                            <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Использовать кастомные размеры</label>
+                            <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Use preferred sizes</label>
                         </div>
                         <div>
                             <div className="collapse text-dark" id="collapseExample">
@@ -98,13 +98,13 @@ const AddTaskShopify = () => {
                         </div>
                         </div>
                         <div className="row g-3">
-                        <h4 className="">Настройки</h4>
+                        <h4 className="">Settings</h4>
                         <div className="col-4">
-                            <label htmlFor="number" className="form-label ">Кол-во тасков</label>
+                            <label htmlFor="number" className="form-label ">Number of tasks</label>
                             <input onChange={handleChange} value={task?.__taskNumber} type="number" min="1" max="100" className="net_input" id="__taskNumber" required />
                         </div>
                         <div className="col-4">
-                            <label htmlFor="profile" className="form-label ">Профиль</label>
+                            <label htmlFor="profile" className="form-label ">Profile</label>
                             <select value={task?.profile} onChange={handleChange} className="net_select" id="profile" required>
                             <option disabled={true}>Выбрать...</option>
                             {
@@ -117,7 +117,7 @@ const AddTaskShopify = () => {
                             </select>
                         </div>
                         <div className="col-4">
-                            <label htmlFor="mode" className="form-label ">Режим</label>
+                            <label htmlFor="mode" className="form-label ">Mode</label>
                             <select value={task?.mode} onChange={handleChange} className="net_select" id="mode" required>
                             <option disabled={true}>Выбрать...</option>
                             <option>release</option>
@@ -125,10 +125,18 @@ const AddTaskShopify = () => {
                             </select>
                         </div>
                         <div className="col-4">
+<<<<<<< HEAD
                             <label htmlFor="proxyProfile" className="form-label ">Прокси</label>
                             <select value={task?.proxyProfile} onChange={handleChange} className="net_select" id="proxyProfile" required>
                             <option disabled={true}>Выбрать...</option>
                             {Object.keys(proxyProfiles).map((profile:string)=><option value={profile}>{profile}</option>)}
+=======
+                            <label htmlFor="proxyProfile" className="form-label ">Proxy</label>
+                            <select className="net_select" id="proxyProfile" required>
+                            <option>Выбрать...</option>
+                            <option>Профиль 1</option>
+                            <option>Профиль 2</option>
+>>>>>>> ec49b2620ac65f2ca0cce1e67da0bcced02247e1
                             </select>
                         </div>
                         <div className="col-4">
@@ -143,33 +151,8 @@ const AddTaskShopify = () => {
                             <input onChange={handleChange} checked={task?.retryOnFailure} type="checkbox" className="net_checkbox" id="retryOnFailure" />
                             <label htmlFor="retryOnFailure" className="form-label ">Retry on failure</label>
                         </div>
-                        <div className="">
-                        <input className="net_checkbox" type="checkbox" id="automaticMode" />
-                        <label className="form-check-label " htmlFor="automaticModeSwitch">Автоматический режим
-                            <button className="icon_button" data-bs-toggle="modal" data-bs-target="#automaticModeInfo">
-                            <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} className="bi bi-info-lg" viewBox="0 0 16 16">
-                                <path d="m10.277 5.433-4.031.505-.145.67.794.145c.516.123.619.309.505.824L6.101 13.68c-.34 1.578.186 2.32 1.423 2.32.959 0 2.072-.443 2.577-1.052l.155-.732c-.35.31-.866.434-1.206.434-.485 0-.66-.34-.536-.939l1.763-8.278zm.122-3.673a1.76 1.76 0 1 1-3.52 0 1.76 1.76 0 0 1 3.52 0z" />
-                            </svg>
-                            </button>
-                        </label>
-                        </div>
-                        <div className="modal fade" id="automaticModeInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                            <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="staticBackdropLabel">Автоматический режим</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
-                            </div>
-                            <div className="modal-body">
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="net_button_primary" data-bs-dismiss="modal">Понятно</button>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
                         <br />
-                        <button className="net_button_primary" id="saveNewTaskButton">Сохранить</button>
+                        <button className="net_button_primary" id="saveNewTaskButton">Save</button>
                         <br />
                     </form>
                 </div>
