@@ -125,18 +125,10 @@ const AddTaskShopify = () => {
                             </select>
                         </div>
                         <div className="col-4">
-<<<<<<< HEAD
                             <label htmlFor="proxyProfile" className="form-label ">Прокси</label>
                             <select value={task?.proxyProfile} onChange={handleChange} className="net_select" id="proxyProfile" required>
                             <option disabled={true}>Выбрать...</option>
                             {Object.keys(proxyProfiles).map((profile:string)=><option value={profile}>{profile}</option>)}
-=======
-                            <label htmlFor="proxyProfile" className="form-label ">Proxy</label>
-                            <select className="net_select" id="proxyProfile" required>
-                            <option>Выбрать...</option>
-                            <option>Профиль 1</option>
-                            <option>Профиль 2</option>
->>>>>>> ec49b2620ac65f2ca0cce1e67da0bcced02247e1
                             </select>
                         </div>
                         <div className="col-4">
