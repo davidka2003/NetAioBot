@@ -24,6 +24,7 @@ const Tasks = () => {
   const changeHandler = (event:ChangeEvent<HTMLInputElement>)=>{
     // console.log(task)
     let currentTask = /* {...task} */{...edit}
+    console.log(edit)
     switch(event.target.id){
       case 'positive':
         currentTask.positive = event.target.value.split("|")
@@ -40,6 +41,9 @@ const Tasks = () => {
       case "profile":
         currentTask.profile=event.target.value
         break
+      case "proxyProfile":
+        currentTask.proxyProfile=event.target.value
+        break  
       case "retryOnFailure":
         currentTask.retryOnFailure = event.target.checked
         break
@@ -174,8 +178,8 @@ const Tasks = () => {
                     </div>
                     <div className="col">
                       <label htmlFor="mode" className="form-label">Proxy</label>
-                      <select onchange= {changeHandler} value={edit?.proxy} className="form-select" id="mode" required>
-                        <option disabled={true}>Выбрать...</option>
+                      <select onChange= {changeHandler} value={edit.proxyProfile} className="form-select" id="proxyProfile" required>
+                        <option value="noProxy">Выбрать...</option>
                         {Object.keys(proxyProfiles).map((profile:string)=><option value={profile}>{profile}</option>)}
                       </select>
                     </div>

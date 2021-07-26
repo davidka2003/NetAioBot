@@ -3,7 +3,7 @@ import { ActionType } from "."
 export const ADD_PROXY_PROFILE = "ADD_PROXIE_PROFILE"
 export const REMOVE_PROXY_PROFILE = "REMOVE_PROXIE_PROFILE"
 export const EDIT_PROXY_PROFILE = "EDIT_PROXIE_PROFILE"
-const defaultState = JSON.parse(localStorage.getItem('proxyProfiles')!)||{}
+const defaultState = JSON.parse(localStorage.getItem('proxyProfiles')!)||{noProxy:["http://localhost:8000/"]}
 export const proxyProfilesReducer = (state = defaultState ,action:ActionType)=>{
     let currentState
     switch (action.type){

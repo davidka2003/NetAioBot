@@ -43,7 +43,7 @@ const Proxy = () => {
               </tr>
             </thead>
             <tbody id="proxiesTable">
-                {Object.keys(proxyProfiles).map((profileName:string)=>(
+                {Object.keys(proxyProfiles).filter(proxy=>proxy!="noProxy").map((profileName:string)=>(
                     <tr className="">
                     <td>{profileName}</td>
                     <td>{proxyProfiles[profileName].proxy[0]}</td>
