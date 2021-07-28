@@ -84,36 +84,36 @@ const installExtensions = async () => {
 };
 
 
-const Logout=async()=>{
-  if (!loginWindow) {
-    fetch("http://localhost:5000/auth/logout", {
-      "headers": {
-          "accept": "*/*",
-          "accept-language": "ru",
-          "content-type": "application/json",
-      },
-      "referrerPolicy": "no-referrer-when-downgrade",
-      "body": JSON.stringify({
-          key:KEY
-      }),
-      "method": "POST",
-      "mode": "cors",
-      "credentials": "omit"
-      })
-      .then((r:any)=>r.json())
-      .then((r:any)=>{
-        console.log(r)
-        if(r.success){
-          console.log("success")
-          // beforeQuitFlag = false
-          return app.quit()
-        }
-        return setTimeout(Logout,15000)
-      }).catch(console.log)
-      return setTimeout(Logout,15000)      
-    }
-  return
-}
+// const Logout=async()=>{
+//   if (!loginWindow) {
+//     fetch("http://localhost:5000/auth/logout", {
+//       "headers": {
+//           "accept": "*/*",
+//           "accept-language": "ru",
+//           "content-type": "application/json",
+//       },
+//       "referrerPolicy": "no-referrer-when-downgrade",
+//       "body": JSON.stringify({
+//           key:KEY
+//       }),
+//       "method": "POST",
+//       "mode": "cors",
+//       "credentials": "omit"
+//       })
+//       .then((r:any)=>r.json())
+//       .then((r:any)=>{
+//         console.log(r)
+//         if(r.success){
+//           console.log("success")
+//           // beforeQuitFlag = false
+//           return app.quit()
+//         }
+//         return setTimeout(Logout,15000)
+//       }).catch(console.log)
+//       return setTimeout(Logout,15000)      
+//     }
+//   return
+// }
 
 
 
@@ -125,11 +125,19 @@ const createLogoutWindow = async () => {
     await installExtensions();
   }
 
-    _logoutWindow = new BrowserWindow({
+  _logoutWindow = new BrowserWindow({
     show: false,
+    autoHideMenuBar:true,
+    resizable:false,
     width: 1,
     height: 1,
+    webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: true
+    },
   });
+  _logoutWindow.loadURL(`file://${__dirname}/index.html?viewLogout`);
+  _logoutWindow.on('show',_logoutWindow.hide)
   
 };
 
@@ -152,6 +160,9 @@ const createMainWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
+    autoHideMenuBar:true,
+    minWidth: 1024,
+    minHeight: 728,
     height: 728,
     icon: getAssetPath('icon.png'),
     webPreferences: {
@@ -176,10 +187,13 @@ const createMainWindow = async () => {
     }
     // mainWindow.hide()
   });
-  
+  mainWindow.on('ready-to-show',()=>{
+    if(loginWindow)loginWindow.close()
+  })/* added */
   mainWindow.on('closed',(event:Electron.Event)=>{
     mainWindow=null
-    Logout()
+    !loginWindow?_logoutWindow?.webContents.send('onCloseLogout'):null
+    // Logout()
   })
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
@@ -213,7 +227,9 @@ const createLoginWindow = async () => {
   loginWindow = new BrowserWindow({
     show: false,
     width: 400,
-    height: 300,
+    height: 530,
+    resizable:false,
+    autoHideMenuBar:true,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,
@@ -245,6 +261,9 @@ const createLoginWindow = async () => {
     LOGOUT
     loginWindow=null */
 
+  })
+  loginWindow.on('ready-to-show',()=>{
+    if(mainWindow)mainWindow.close()
   })
 
   const menuBuilder = new MenuBuilder(loginWindow);
@@ -283,9 +302,9 @@ app.on('activate', () => {
 });
 ipcMain.on('setKey',(_event,args)=>KEY = args)
 ipcMain.on('deleteKey',()=>KEY = '')
-ipcMain.on('login',()=>{createMainWindow();if(loginWindow)loginWindow.close();})
-ipcMain.on('logout',()=>{createLoginWindow();if(mainWindow)mainWindow.close();})
-
+ipcMain.on('login',()=>{createMainWindow();/* if(loginWindow)loginWindow.close(); */})
+ipcMain.on('logout',()=>{createLoginWindow()/* ;if(mainWindow)mainWindow.close() */;})
+ipcMain.on('onCloseLogoutSuccess',app.quit)
 
 
 

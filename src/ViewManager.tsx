@@ -5,13 +5,15 @@ import {
 } from 'react-router-dom'
 import App from './App';
 import Login from './Components/Login/Login';
+import Logout from './Components/Logout/Logout';
 
 class ViewManager extends Component {
 
   static Views() {
     return {
       viewMain: <App/>,
-      viewLogin: <Login/>
+      viewLogin: <Login/>,
+      viewLogout:<Logout/>
     }
   }
 
