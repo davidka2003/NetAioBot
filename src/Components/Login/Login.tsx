@@ -4,6 +4,7 @@ import { remote } from 'electron'
 import React, { ChangeEvent, FormEvent, useEffect,useState } from 'react'
 import '../Login/login.global.scss'
 import mainLogo from '../../images/logo.svg'
+import { AUTHSERVER } from '../..'
 
 const Login = () => {
     const [key, setkey] = useState(localStorage.getItem("key")||'')
@@ -11,7 +12,7 @@ const Login = () => {
     // windows.forEach((window,id)=>window.show())
 
     const login = ()=>
-    fetch("http://localhost:5000/auth/login", {
+    fetch(`${AUTHSERVER}/auth/login`, {
         "headers": {
             "accept": "*/*",
             "accept-language": "ru",

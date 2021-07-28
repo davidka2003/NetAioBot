@@ -1,9 +1,10 @@
 
 import { ipcRenderer } from 'electron'
 import React from 'react'
+import { AUTHSERVER } from '../..'
 
 const logout=async()=>
-    await fetch("http://localhost:5000/auth/logout", {
+    await fetch(`${AUTHSERVER}/auth/logout`, {
         "headers": {
             "accept": "*/*",
             "accept-language": "ru",

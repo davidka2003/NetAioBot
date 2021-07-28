@@ -7,10 +7,11 @@ import './scss/settings.global.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { EDIT_SETTINGS } from '../../store/settingsReducer'
 import { Dispatch } from 'redux'
+import { AUTHSERVER } from '../..'
 
 
 export const logout = ()=>
-    fetch("http://localhost:5000/auth/logout", {
+    fetch(`${AUTHSERVER}/auth/logout`, {
         "headers": {
             "accept": "*/*",
             "accept-language": "ru",
