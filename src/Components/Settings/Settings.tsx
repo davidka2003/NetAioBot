@@ -7,7 +7,7 @@ import './scss/settings.global.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { EDIT_SETTINGS } from '../../store/settingsReducer'
 import { Dispatch } from 'redux'
-import { AUTHSERVER } from '../..'
+import { AUTHSERVER } from '../../index'
 
 
 export const logout = ()=>

@@ -1,7 +1,7 @@
 
 import { ipcRenderer } from 'electron'
 import React from 'react'
-import { AUTHSERVER } from '../..'
+import { AUTHSERVER } from '../../index'
 
 const logout=async()=>
     await fetch(`${AUTHSERVER}/auth/logout`, {
