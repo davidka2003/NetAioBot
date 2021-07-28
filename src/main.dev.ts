@@ -15,7 +15,7 @@ import { app, BrowserWindow, autoUpdater ,ipcMain, shell,dialog } from 'electron
 // import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-const fetch = require('node-fetch')
+// const fetch = require('node-fetch')
 let KEY = ''
 const server = 'https://your-deployment-url.com'
 const url = `${server}/update/${process.platform}/${app.getVersion()}`
@@ -82,38 +82,6 @@ const installExtensions = async () => {
     )
     .catch(console.log);
 };
-
-
-// const Logout=async()=>{
-//   if (!loginWindow) {
-//     fetch("http://localhost:5000/auth/logout", {
-//       "headers": {
-//           "accept": "*/*",
-//           "accept-language": "ru",
-//           "content-type": "application/json",
-//       },
-//       "referrerPolicy": "no-referrer-when-downgrade",
-//       "body": JSON.stringify({
-//           key:KEY
-//       }),
-//       "method": "POST",
-//       "mode": "cors",
-//       "credentials": "omit"
-//       })
-//       .then((r:any)=>r.json())
-//       .then((r:any)=>{
-//         console.log(r)
-//         if(r.success){
-//           console.log("success")
-//           // beforeQuitFlag = false
-//           return app.quit()
-//         }
-//         return setTimeout(Logout,15000)
-//       }).catch(console.log)
-//       return setTimeout(Logout,15000)      
-//     }
-//   return
-// }
 
 
 
