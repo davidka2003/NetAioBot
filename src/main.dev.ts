@@ -84,7 +84,36 @@ const installExtensions = async () => {
 };
 
 
-
+const Logout=async()=>{
+  if (!loginWindow) {
+    fetch("http://localhost:5000/auth/logout", {
+      "headers": {
+          "accept": "*/*",
+          "accept-language": "ru",
+          "content-type": "application/json",
+      },
+      "referrerPolicy": "no-referrer-when-downgrade",
+      "body": JSON.stringify({
+          key:KEY
+      }),
+      "method": "POST",
+      "mode": "cors",
+      "credentials": "omit"
+      })
+      .then((r:any)=>r.json())
+      .then((r:any)=>{
+        console.log(r)
+        if(r.success){
+          console.log("success")
+          // beforeQuitFlag = false
+          return app.quit()
+        }
+        return setTimeout(Logout,15000)
+      }).catch(console.log)
+      return setTimeout(Logout,15000)      
+    }
+  return
+}
 
 
 
@@ -150,34 +179,7 @@ const createMainWindow = async () => {
   
   mainWindow.on('closed',(event:Electron.Event)=>{
     mainWindow=null
-    if (!loginWindow) {
-      fetch("http://localhost:5000/auth/logout", {
-        "headers": {
-            "accept": "*/*",
-            "accept-language": "ru",
-            "content-type": "application/json",
-        },
-        "referrerPolicy": "no-referrer-when-downgrade",
-        "body": JSON.stringify({
-            key:KEY
-        }),
-        "method": "POST",
-        "mode": "cors",
-        "credentials": "omit"
-        })
-        .then((r:any)=>r.json())
-        .then((r:any)=>{
-          console.log(r)
-          if(r.success){
-            console.log("success")
-            // beforeQuitFlag = false
-            return app.quit()
-          }
-          return setTimeout(()=>event.initEvent('closed'),15000)
-        }).catch(console.log)
-        return setTimeout(()=>event.initEvent('closed'),15000)      
-      }
-      return
+    Logout()
   })
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
@@ -283,3 +285,7 @@ ipcMain.on('setKey',(_event,args)=>KEY = args)
 ipcMain.on('deleteKey',()=>KEY = '')
 ipcMain.on('login',()=>{createMainWindow();if(loginWindow)loginWindow.close();})
 ipcMain.on('logout',()=>{createLoginWindow();if(mainWindow)mainWindow.close();})
+
+
+
+
