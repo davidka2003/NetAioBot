@@ -6,6 +6,7 @@ import { ShopifyMonitor } from '../../scripts/shopify/shopify'
 import { EDIT_ALL_CHECKOUTS_STATE, EDIT_TASK, REMOVE_ALL_TASKS, RUN_STOP_ALL_TASKS } from '../../store/tasksReducer'
 import { sizes } from '../AddTask/AddTask'
 import Task from './Task'
+const {SITES} = require('../../scripts/shopify/shopifyConfig.json')
 const Tasks = () => {
   const dispatch = useDispatch()
   const tasks = useSelector((state:any)=>state.tasks)
@@ -63,8 +64,10 @@ const Tasks = () => {
   }
   const handleStartAll = ()=>{
     dispatch({type:EDIT_ALL_CHECKOUTS_STATE,payload:{message:{level:"LOW",state:"started"}}})
-    !Object.keys(tasks).filter(taskId=>tasks[taskId].isRun&&tasks[taskId].shop=='shopify'==true).length? new ShopifyMonitor().Parse():null
-    dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
+    if(!Object.keys(tasks).filter(taskId=>tasks[taskId].isRun&&tasks[taskId].shop=='shopify'==true).length) {
+      for (let url of Object.keys(SITES)) new ShopifyMonitor(url).Parse()
+    }
+dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
   }
   const handleStopAll = ()=>{
     dispatch({type:EDIT_ALL_CHECKOUTS_STATE,payload:{message:{level:"ERROR",state:"stopped"}}})
@@ -165,7 +168,7 @@ const Tasks = () => {
                       <label htmlFor="profile" className="form-label">Profile</label>
                       <select onChange={changeHandler} value = {edit.profile} className="form-select" id="profile" required>
                         <option disabled={true}>Выбрать...</option>
-                        {Object.keys(profiles).map((profile:string)=><option value={profile}>{profile}</option>)}
+                        {Object.keys(profiles).map((profile:string,index)=><option key={index} value={profile}>{profile}</option>)}
                       </select>
                     </div>
                     <div className="col">
@@ -179,8 +182,8 @@ const Tasks = () => {
                     <div className="col">
                       <label htmlFor="mode" className="form-label">Proxy</label>
                       <select onChange= {changeHandler} value={edit.proxyProfile} className="form-select" id="proxyProfile" required>
-                        <option value="noProxy">Выбрать...</option>
-                        {Object.keys(proxyProfiles).map((profile:string)=><option value={profile}>{profile}</option>)}
+                        <option value="">Выбрать...</option>
+                        {Object.keys(proxyProfiles).map((profile:string,index)=><option key={index} value={profile}>{profile}</option>)}
                       </select>
                     </div>
                     <div className="col">

@@ -1,5 +1,14 @@
 // import { ShopifyTask } from "./AddTask/AddTaskShopify";
 
+export interface ActionInterface{
+    type:string,
+    payload:any
+}
+
+export interface ProxyProfileInterface{
+    profileName:string|"noProxy",
+    proxy:string[]
+}
 export interface ShopifyTaskInterface{
     isCustomSizes?:boolean,
     sizes:any,
@@ -11,7 +20,15 @@ export interface ShopifyTaskInterface{
     negative?:string[],
     id?:string,
     checkouts?:{},
-    checkoutsBypass?:{},
+    checkoutsBypass?:{
+        [key:string]:{
+            [key:string]:{
+                bypass:any,
+                used:boolean
+            }
+
+        }
+    },
     currentCheckoutState?:{
         state:string,
         level:  "LOW"|"ERROR"|"SUCCESS"

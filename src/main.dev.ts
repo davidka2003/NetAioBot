@@ -11,53 +11,52 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, ipcMain, shell } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import { app, BrowserWindow, autoUpdater ,ipcMain, shell,dialog } from 'electron';
+// import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 const fetch = require('node-fetch')
 let KEY = ''
-let beforeQuitFlag = true
-export default class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info';
-    autoUpdater.logger = log;
-    autoUpdater.checkForUpdatesAndNotify();
-  }
-}
-app.on('before-quit',(event:Electron.Event)=>{
-  if(beforeQuitFlag){
-    event.preventDefault()
-  }
-  else return
-  fetch("http://localhost:5000/auth/logout", {
-    "headers": {
-        "accept": "*/*",
-        "accept-language": "ru",
-        "content-type": "application/json",
-    },
-    "referrerPolicy": "no-referrer-when-downgrade",
-    "body": JSON.stringify({
-        key:KEY
-    }),
-    "method": "POST",
-    "mode": "cors",
-    "credentials": "omit"
-    })
-    .then((r:any)=>r.json())
-    .then((r:any)=>{
-      if(r.success){
-        beforeQuitFlag = false
-        return app.quit()
-      }
+const server = 'https://your-deployment-url.com'
+const url = `${server}/update/${process.platform}/${app.getVersion()}`
 
-      return
-    }).catch(console.log)
-});
+autoUpdater.setFeedURL({ url })
 
+
+setInterval(() => {
+  autoUpdater.checkForUpdates()
+}, 600000)
+
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+  }
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  })
+})
+autoUpdater.on('error', message => {
+  console.error('There was a problem updating the application')
+  console.error(message)
+})
+
+
+// export default class AppUpdater {
+//   constructor() {
+//     log.transports.file.level = 'info';
+//     autoUpdater.logger = log;
+//     autoUpdater.checkForUpdatesAndNotify();
+//   }
+// }
 
 let mainWindow: BrowserWindow | null = null;
 let loginWindow: BrowserWindow | null = null;
+let _logoutWindow: BrowserWindow | null = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -82,6 +81,27 @@ const installExtensions = async () => {
       forceDownload
     )
     .catch(console.log);
+};
+
+
+
+
+
+
+const createLogoutWindow = async () => {
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.DEBUG_PROD === 'true'
+  ) {
+    await installExtensions();
+  }
+
+    _logoutWindow = new BrowserWindow({
+    show: false,
+    width: 1,
+    height: 1,
+  });
+  
 };
 
 const createMainWindow = async () => {
@@ -128,10 +148,37 @@ const createMainWindow = async () => {
     // mainWindow.hide()
   });
   
-  // mainWindow.on('closed',()=>{
-  //   app.quit()
-  //   mainWindow=null
-  // })
+  mainWindow.on('closed',(event:Electron.Event)=>{
+    mainWindow=null
+    if (!loginWindow) {
+      fetch("http://localhost:5000/auth/logout", {
+        "headers": {
+            "accept": "*/*",
+            "accept-language": "ru",
+            "content-type": "application/json",
+        },
+        "referrerPolicy": "no-referrer-when-downgrade",
+        "body": JSON.stringify({
+            key:KEY
+        }),
+        "method": "POST",
+        "mode": "cors",
+        "credentials": "omit"
+        })
+        .then((r:any)=>r.json())
+        .then((r:any)=>{
+          console.log(r)
+          if(r.success){
+            console.log("success")
+            // beforeQuitFlag = false
+            return app.quit()
+          }
+          return setTimeout(()=>event.initEvent('closed'),15000)
+        }).catch(console.log)
+        return setTimeout(()=>event.initEvent('closed'),15000)      
+      }
+      return
+  })
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
@@ -187,10 +234,16 @@ const createLoginWindow = async () => {
       loginWindow.focus();
     }
   });
-  // loginWindow.on('closed',()=>{
-  //   app.quit()
-  //   loginWindow=null
-  // })
+  loginWindow.on('closed',()=>{
+    loginWindow=null
+    if (!mainWindow) {
+      app.quit()
+    }
+    /* app.quit()
+    LOGOUT
+    loginWindow=null */
+
+  })
 
   const menuBuilder = new MenuBuilder(loginWindow);
   menuBuilder.buildMenu();
@@ -203,7 +256,7 @@ const createLoginWindow = async () => {
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
-  new AppUpdater();
+  // new AppUpdater();
 };
 
 /**
@@ -218,13 +271,13 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.whenReady().then(createLoginWindow).catch(console.log);
+app.whenReady().then(()=>{createLogoutWindow();createLoginWindow()}).catch(console.log);
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   // if (mainWindow === null) createMainWindow();
-  if (loginWindow === null) createLoginWindow()/* ;createMainWindow() */
+  if (loginWindow === null) /* createLogoutWindow(); */createLoginWindow()/* ;createMainWindow() */
 });
 ipcMain.on('setKey',(_event,args)=>KEY = args)
 ipcMain.on('deleteKey',()=>KEY = '')

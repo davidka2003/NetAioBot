@@ -4,17 +4,18 @@ import { ShopifyMonitor } from '../../scripts/shopify/shopify'
 import { EDIT_CHECKOUT_STATE, REMOVE_TASK, RUN_STOP_TASK } from '../../store/tasksReducer'
 import console from 'console'
 import './tasks.global.scss'
-export const LOW = "white"
+import { ShopifyTaskInterface } from '../../Interfaces/interfaces'
+import { Dispatch } from 'redux'
+export const LOW = "blue"
 export const ERROR = "red"
 export const SUCCESS = "green"
-
+const {SITES} = require('../../scripts/shopify/shopifyConfig.json')
 const message = {
   LOW,ERROR,SUCCESS
 }
 const Task = (props:{id:string,callEdit:Function})=>{
-    const dispatch = useDispatch()
-    const tasks = useSelector((state:any)=>state.tasks)
-
+    const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
+    const tasks:{[key:string]:ShopifyTaskInterface} = useSelector((state:any)=>state.tasks)
     let handleDelete =()=>{
       dispatch({type:RUN_STOP_TASK,payload:{taskId:props.id,isRun:false}})
       dispatch({type:REMOVE_TASK,payload:{...tasks[props.id]}})
@@ -23,9 +24,13 @@ const Task = (props:{id:string,callEdit:Function})=>{
       props.callEdit(id)
     }
     let handleStart = ()=>{
+      
+      dispatch({type:EDIT_CHECKOUT_STATE,payload:{taskId:props.id,message:{level:"LOW",state:"started"}}})
       switch (tasks[props.id].shop){
         case 'shopify':
-          !Object.keys(tasks).filter(taskId=>tasks[taskId].isRun&&tasks[taskId].shop=='shopify'==true).length? new ShopifyMonitor().Parse():null
+          if(!Object.keys(tasks).filter(taskId=>tasks[taskId].isRun&&tasks[taskId].shop=='shopify'==true).length) {
+            for (let url of Object.keys(SITES)) new ShopifyMonitor(url).Parse()
+          }
           break
         case 'solebox':
           console.log('solebox')
@@ -37,17 +42,16 @@ const Task = (props:{id:string,callEdit:Function})=>{
 
     }
     let handleStop = ()=>{
-      dispatch({type:EDIT_CHECKOUT_STATE,payload:{taskId:props.id,message:{level:"ERROR",state:"stop"}}})
+      dispatch({type:EDIT_CHECKOUT_STATE,payload:{taskId:props.id,message:{level:"ERROR",state:"stopped"}}})
       dispatch({type:RUN_STOP_TASK,payload:{taskId:props.id,isRun:false}})
     }
-
     return(
       <tr className = "" key={props.id}>
       <td>{tasks[props.id].shop}</td>
-      <td>{'+: ' + tasks[props.id].positive.join("|")} <br/> {'-: ' + tasks[props.id].negative.join("|")}</td>
+      <td>{'+: ' + tasks[props.id].positive?.join("|")} <br/> {'-: ' + tasks[props.id].negative?.join("|")}</td>
       <td>{tasks[props.id].mode}</td>
       <td style={{color:
-        message[tasks[props.id].currentCheckoutState?.level]||"white"}
+        message[tasks[props.id]?.currentCheckoutState!.level]||"blue"}
       }>{tasks[props.id].currentCheckoutState?.state}</td>
       <td>
         <div className = 'btn-group'>

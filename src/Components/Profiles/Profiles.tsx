@@ -5,12 +5,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ProfileInterface } from '../../Interfaces/interfaces'
 import '../../scss/input.global.scss'
 import '../../scss/index.global.scss'
+import { Dispatch } from 'redux'
 
 
 
 
 const Profiles = () => {
-    const dispatch = useDispatch()
+    const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
     const profiles = useSelector((state:any)=>state.profiles)
     const [edit, setedit] = useState<ProfileInterface>({})
 

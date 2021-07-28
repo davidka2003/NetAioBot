@@ -6,6 +6,7 @@ import '../../scss/background.global.scss'
 import './scss/settings.global.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { EDIT_SETTINGS } from '../../store/settingsReducer'
+import { Dispatch } from 'redux'
 
 
 export const logout = ()=>
@@ -38,7 +39,7 @@ export const logout = ()=>
 
 
 const Settings = () => {
-  const dispatch = useDispatch()
+  const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
   const settingsStorage = useSelector((state:any)=>state.settings)
   const [settings, setSettings] = useState(settingsStorage)
   const logoutHandler = (event:FormEvent)=>{

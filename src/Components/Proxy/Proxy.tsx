@@ -1,31 +1,45 @@
-import console from 'console'
-import React, { ChangeEvent, FormEvent, MouseEventHandler, useState } from 'react'
+import React, { ChangeEvent, FormEvent, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Dispatch } from 'redux'
+import { ProxyProfileInterface } from '../../Interfaces/interfaces'
 import { ADD_PROXY_PROFILE, REMOVE_PROXY_PROFILE } from '../../store/proxyProfilesReducer'
 
 const Proxy = () => {
     const [proxyProfile, setproxyProfile] = useState({proxy:'',profileName:''})
-    const dispatch = useDispatch()
-    const proxyProfiles = useSelector((state:any)=>state.proxy)
+    const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
+    const proxyProfiles:{[profileName:string]:ProxyProfileInterface} = useSelector((state:any)=>state.proxy)
     const deleteProfileHandler = (profileName:string) =>{
         return dispatch({type:REMOVE_PROXY_PROFILE,payload:{...proxyProfiles[profileName]}})
     }
     const changeHandler = (event:ChangeEvent<HTMLTextAreaElement&HTMLInputElement>)=>{
         let currentProxyProfile = {...proxyProfile}
-        currentProxyProfile[event.target.id] = event.target.value
+        switch (event.target.id) {
+          case "proxy":
+            currentProxyProfile.proxy = event.target.value
+            break;
+          case "profileName":
+            currentProxyProfile.profileName = event.target.value
+            break
+          default:
+            break;
+        }
+        // console.log(currentProxyProfile)
         return setproxyProfile(currentProxyProfile)
     }
     const submitHandler = (event:FormEvent)=>{
         event?.preventDefault()
         let currentProxyProfile = {...proxyProfile}
-        currentProxyProfile.proxy = currentProxyProfile.proxy.replace(/\s+/g," ").replace('"',"").trim().split(/ |\n|;|\||,/g).map(proxy=>{
-            if (proxy.length) {
-                const [login,password,ip,port] = proxy.split(/https:\/\/|http:\/\/|:|@/g)
-                return "http://"+login+":"+password+"@"+ip+":"+port                
-            }return
+        /* format proxy */
+        let formatedProxy = currentProxyProfile.proxy.replace(/\s+/g," ").replace(/"|'|`/g,"").trim().split(/ |\n|;|\||,/g).map(proxy=>{
+          if (proxy.length) {
+            //   console.log(proxy,proxy.split(/https:\/\/|http:\/\/|:|@/g))
+              const [login,password,ip,port] = proxy.split(/https:\/\/|http:\/\/|:|@/g).filter(chunk=>chunk?.length)
+              return "http://"+login+":"+password+"@"+ip+":"+port                
+          }return
         }).filter(proxy=>proxy)
         return dispatch({type:ADD_PROXY_PROFILE,payload:{
-            ...currentProxyProfile
+            profileName:currentProxyProfile.profileName,
+            proxy:formatedProxy
         }})
     }
     return (
@@ -43,26 +57,26 @@ const Proxy = () => {
               </tr>
             </thead>
             <tbody id="proxiesTable">
-                {Object.keys(proxyProfiles).filter(proxy=>proxy!="noProxy").map((profileName:string)=>(
-                    <tr className="">
-                    <td>{profileName}</td>
-                    <td>{proxyProfiles[profileName].proxy[0]}</td>
-                    <td>
-                    <div className="btn-group">
-                        <button onClick={()=>deleteProfileHandler(profileName)} className="delete_icon_button" id="DeleteProxyProfile">
-                        <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16}  className="bi bi-trash" viewBox="0 0 16 16">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                            <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                        </svg>
-                        </button>
-                        {/* <button className="edit_icon_button" data-bs-toggle="modal" data-bs-target="#editProxyProfile">
-                        <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16}  className="bi bi-pencil" viewBox="0 0 16 16">
-                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                        </svg>
-                        </button> */}
-                    </div>
-                    </td>
-                </tr>                  
+                {Object.keys(proxyProfiles).filter(proxy=>proxy!="noProxy").map((profileName:string,index:number)=>(
+                    <tr key={index} className="">
+                        <td>{profileName}</td>
+                        <td>{proxyProfiles[profileName].proxy[0]}</td>
+                        <td>
+                        <div className="btn-group">
+                            <button onClick={()=>deleteProfileHandler(profileName)} className="delete_icon_button" id="DeleteProxyProfile">
+                            <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16}  className="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                            </svg>
+                            </button>
+                            {/* <button className="edit_icon_button" data-bs-toggle="modal" data-bs-target="#editProxyProfile">
+                            <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16}  className="bi bi-pencil" viewBox="0 0 16 16">
+                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                            </svg>
+                            </button> */}
+                        </div>
+                        </td>
+                    </tr>                  
                 ))
                 }
             </tbody>

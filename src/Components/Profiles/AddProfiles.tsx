@@ -5,12 +5,13 @@ import { ProfileInterface } from '../../Interfaces/interfaces'
 import '../../scss/input.global.scss'
 import '../../scss/buttons.global.scss'
 import { ADD_PROFILE } from '../../store/profilesReducer'
+import { Dispatch } from 'redux'
 
 
 const AddProfiles = () => {
     // const [context, setcontext] = useContext<any>(Context)
     const [profile, setprofile] = useState<ProfileInterface>({})
-    const dispatch = useDispatch()
+    const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
 
     let handleSubmit = (event:FormEvent)=>{
         event.preventDefault()
