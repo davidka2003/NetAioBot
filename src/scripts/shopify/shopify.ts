@@ -62,7 +62,7 @@ const getRandomInt = (min:number, max:number)=> {
     return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
 
-class BypassQueueLink{
+export class BypassQueueLink{
     public cookieJar = request.jar()
     protected __checkoutUrl = ''
     public checkoutUrl = ''
@@ -149,7 +149,7 @@ class BypassQueueLink{
 
 } 
 
-class Checkout{
+export class Checkout{
     protected stop = false
     protected totalPrice = 0
     protected cookieJar = request.jar()

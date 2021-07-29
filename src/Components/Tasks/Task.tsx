@@ -4,7 +4,7 @@ import { ShopifyMonitor } from '../../scripts/shopify/shopify'
 import { EDIT_CHECKOUT_STATE, REMOVE_TASK, RUN_STOP_TASK } from '../../store/tasksReducer'
 import console from 'console'
 import './tasks.global.scss'
-import { ShopifyTaskInterface } from '../../Interfaces/interfaces'
+import { ShopifyTaskInterface, SoleboxTaskInterface } from '../../Interfaces/interfaces'
 import { Dispatch } from 'redux'
 export const LOW = "blue"
 export const ERROR = "red"
@@ -15,7 +15,7 @@ const message = {
 }
 const Task = (props:{id:string,callEdit:Function})=>{
     const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
-    const tasks:{[key:string]:ShopifyTaskInterface} = useSelector((state:any)=>state.tasks)
+    const tasks:{[key:string]:ShopifyTaskInterface|SoleboxTaskInterface} = useSelector((state:any)=>state.tasks)
     let handleDelete =()=>{
       dispatch({type:RUN_STOP_TASK,payload:{taskId:props.id,isRun:false}})
       dispatch({type:REMOVE_TASK,payload:{...tasks[props.id],id:props.id}})
@@ -24,7 +24,6 @@ const Task = (props:{id:string,callEdit:Function})=>{
       props.callEdit(id)
     }
     let handleStart = ()=>{
-      
       dispatch({type:EDIT_CHECKOUT_STATE,payload:{taskId:props.id,message:{level:"LOW",state:"started"}}})
       switch (tasks[props.id].shop){
         case 'shopify':
@@ -48,7 +47,22 @@ const Task = (props:{id:string,callEdit:Function})=>{
     return(
       <tr className = "" key={props.id}>
       <td>{tasks[props.id].shop}</td>
-      <td>{'+: ' + tasks[props.id].positive?.join("|")} <br/> {'-: ' + tasks[props.id].negative?.join("|")}</td>
+      {
+        (()=>{
+          switch (tasks[props.id].shop) {
+            case 'shopify':
+              return(
+                <td>{'+: ' + tasks[props.id].positive?.join("|")} <br/> {'-: ' + tasks[props.id].negative?.join("|")}</td>
+              )
+            case 'solebox':
+              return(
+                <td>{tasks[props.id].url}</td>
+              )
+            default:
+              break;
+          }
+        })()
+      }
       <td>{tasks[props.id].mode}</td>
       <td style={{color:
         message[tasks[props.id]?.currentCheckoutState!.level]||"blue"}

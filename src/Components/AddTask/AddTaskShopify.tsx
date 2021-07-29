@@ -4,14 +4,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ProfileInterface, ShopifyTaskInterface } from '../../Interfaces/interfaces'
 import { sizes } from './AddTask'
 import { Dispatch } from 'redux'
-import { ADD_TASK } from '../../store/tasksReducer'
+import { ADD_SHOPIFY_TASK } from '../../store/tasksReducer'
 
 const AddTaskShopify = () => {
     const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
     const profiles:{[key:string]:ProfileInterface} = useSelector((state:any)=>state.profiles)
     const proxyProfiles = useSelector((state:any)=>state.proxy)
     const [task, settask] = useState<ShopifyTaskInterface>({isCustomSizes:false,sizes:{},__taskNumber:1,checkoutsAmount:1,isRun:false,retryOnFailure:true,shop:"shopify"})
-    let handleChange = (event:ChangeEvent<HTMLInputElement&/* | */HTMLSelectElement>)=>{
+    const handleChange = (event:ChangeEvent<HTMLInputElement&/* | */HTMLSelectElement>)=>{
         let currentTask = {...task}
         switch (event.target.id) {
             case "positive":
@@ -49,16 +49,16 @@ const AddTaskShopify = () => {
         console.log(currentTask)
         settask(currentTask)
     }
-    let handlerCreate = (event:FormEvent<HTMLFormElement>)=>{
+    const handleCreate = (event:FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        dispatch({type:ADD_TASK,payload:{...task,shop:"shopify",currentCheckoutState:{level:"LOW",state:"not started"}}})
+        dispatch({type:ADD_SHOPIFY_TASK,payload:{...task,shop:"shopify",currentCheckoutState:{level:"LOW",state:"not started"}}})
 
     }
     return (
         <div className="container row">
             <div className="container col-1" />
                 <div className="container col-10">
-                    <form onSubmit={handlerCreate} className="needs-validation" id="createTaskForm">
+                    <form onSubmit={handleCreate} className="needs-validation" id="createTaskForm">
                         <div className="row g-6">
                         <h2 className=" text-center">Shopify</h2>
                         <h4 className="">Filters</h4>
@@ -117,16 +117,16 @@ const AddTaskShopify = () => {
                         <div className="col-4">
                             <label htmlFor="mode" className="form-label ">Mode</label>
                             <select value={task?.mode} onChange={handleChange} className="net_select" id="mode" required={true}>
-                            <option value="">Выбрать...</option>
-                            <option>release</option>
-                            <option>24/7</option>
+                                <option value="">Выбрать...</option>
+                                <option>release</option>
+                                <option>24/7</option>
                             </select>
                         </div>
                         <div className="col-4">
                             <label htmlFor="proxyProfile" className="form-label ">Прокси</label>
                             <select value={task?.proxyProfile} onChange={handleChange} className="net_select" id="proxyProfile" required={true}>
-                            <option value="">Выбрать...</option>
-                            {Object.keys(proxyProfiles).map((profile:string,index)=><option key={index} value={profile}>{profile}</option>)}
+                                <option value="">Выбрать...</option>
+                                {Object.keys(proxyProfiles).map((profile:string,index)=><option key={index} value={profile}>{profile}</option>)}
                             </select>
                         </div>
                         <div className="col-4">

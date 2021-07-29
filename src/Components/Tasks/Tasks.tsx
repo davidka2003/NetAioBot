@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent } from 'react'
 import {useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ShopifyTaskInterface } from '../../Interfaces/interfaces'
+import { ShopifyTaskInterface,SoleboxTaskInterface } from '../../Interfaces/interfaces'
 import { ShopifyMonitor } from '../../scripts/shopify/shopify'
 import { EDIT_ALL_CHECKOUTS_STATE, EDIT_TASK, REMOVE_ALL_TASKS, RUN_STOP_ALL_TASKS } from '../../store/tasksReducer'
 import { sizes } from '../AddTask/AddTask'
@@ -13,7 +13,7 @@ const Tasks = () => {
   const proxyProfiles = useSelector((state:any)=>state.proxy)
   const profiles = useSelector((state:any)=>state.profiles)
   
-  const [edit, setedit] = useState<ShopifyTaskInterface>({isCustomSizes:false,__taskNumber:1,sizes:{},isRun:false,retryOnFailure:false,checkoutsAmount:1,shop:'shopify'})
+  const [edit, setedit] = useState<ShopifyTaskInterface|SoleboxTaskInterface>({isCustomSizes:false,__taskNumber:1,sizes:{},isRun:false,retryOnFailure:false,checkoutsAmount:1,shop:'shopify'})
   const editTask = (id:string)=>{
     setedit({...tasks}[id])
 
@@ -54,6 +54,8 @@ const Tasks = () => {
       case "__taskNumber":
         currentTask.__taskNumber = parseInt(event.target.value)
         break
+      case "url":
+        currentTask.url = event.target.value
       default:
         event.target.name == "sizes"?currentTask.sizes[event.target.id] = event.target.checked:null
         break;
@@ -117,17 +119,39 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
               </div>
               <div className="modal-body">
                 <form onSubmit={(event)=>saveEdited(event)} className="container needs-validation" id="editTaskForm">
-                  <div className="row g-6">
-                    <h5>Фильтры</h5>
-                    <div className="col">
-                      <label htmlFor="positive" className="form-label">Positive</label>
-                      <input onChange={changeHandler} value={edit.positive?.join("|")} type="text" className="form-control" id="positive" required />
-                    </div>
-                    <div className="col">
-                      <label htmlFor="negative" className="form-label">Negative</label>
-                      <input onChange={changeHandler} value={edit.negative?.join("|")} type="text" className="form-control" id="negative" required />
-                    </div>
-                  </div>
+                  {
+                    (()=>{
+                      switch (edit.shop) {
+                        case "shopify":
+                          return(
+                            <div className="row g-6">
+                            <h5>Filters</h5>
+                            <div className="col">
+                              <label htmlFor="positive" className="form-label">Positive</label>
+                              <input onChange={changeHandler} value={edit.positive?.join("|")} type="text" className="form-control" id="positive" required />
+                            </div>
+                            <div className="col">
+                              <label htmlFor="negative" className="form-label">Negative</label>
+                              <input onChange={changeHandler} value={edit.negative?.join("|")} type="text" className="form-control" id="negative" required />
+                            </div>
+                          </div>
+        
+                          )
+                        case "solebox":
+                          return(
+                            <div className="row g-6">
+                            <div className="col">
+                              <label htmlFor="url" className="form-label">Url</label>
+                              <input onChange={changeHandler} value={edit.url} type="text" className="form-control" id="url" required />
+                            </div>
+                          </div>
+        
+                          )
+                        default:
+                          return
+                      }
+                    })()
+                  }
                   <br />
                   <div className="col">
                     {/* <div className="form-check">

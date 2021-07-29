@@ -1,5 +1,7 @@
 // import { ShopifyTask } from "./AddTask/AddTaskShopify";
 
+import { BypassQueueLink, Checkout } from "../scripts/shopify/shopify";
+
 export interface ActionInterface{
     type:string,
     payload:any
@@ -19,11 +21,13 @@ export interface ShopifyTaskInterface{
     positive?:string[],
     negative?:string[],
     id?:string,
-    checkouts?:{},
+    checkouts?:{
+        [id:string]:Checkout
+    },
     checkoutsBypass?:{
-        [key:string]:{
-            [key:string]:{
-                bypass:any,
+        [url:string]:{
+            [id:string]:{
+                bypass:BypassQueueLink,
                 used:boolean
             }
 
@@ -37,6 +41,27 @@ export interface ShopifyTaskInterface{
     retryOnFailure:boolean,
     checkoutsAmount:1|number,
     shop:"shopify",
+    proxyProfile?:string
+}
+
+export interface SoleboxTaskInterface{
+    isCustomSizes?:boolean,
+    sizes:any,
+    __taskNumber:number,
+    profile?:string,
+    mode?:string,
+    checked?:boolean,
+    url?:string
+    id?:string,
+    checkouts?:{},
+    currentCheckoutState?:{
+        state:string,
+        level:  "LOW"|"ERROR"|"SUCCESS"
+    }
+    isRun:false,
+    retryOnFailure:boolean,
+    checkoutsAmount:1|number,
+    shop:"solebox",
     proxyProfile?:string
 }
 
