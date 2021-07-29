@@ -102,7 +102,7 @@ const AddTaskShopify = () => {
                         </div>
                         <div className="col-4">
                             <label htmlFor="profile" className="form-label ">Profile</label>
-                            <select value={task?.profile} onChange={handleChange} className="net_select" id="profile" required>
+                            <select value={task?.profile} onChange={handleChange} className="net_select" id="profile" required={true}>
                             <option value="">Выбрать...</option>
                             {
                                 Object.keys(profiles||{})?.map((profile,index)=>{
@@ -115,15 +115,15 @@ const AddTaskShopify = () => {
                         </div>
                         <div className="col-4">
                             <label htmlFor="mode" className="form-label ">Mode</label>
-                            <select value={task?.mode} onChange={handleChange} className="net_select" id="mode" required>
-                            <option disabled={true}>Выбрать...</option>
+                            <select value={task?.mode} onChange={handleChange} className="net_select" id="mode" required={true}>
+                            <option value="">Выбрать...</option>
                             <option>release</option>
                             <option>24/7</option>
                             </select>
                         </div>
                         <div className="col-4">
                             <label htmlFor="proxyProfile" className="form-label ">Прокси</label>
-                            <select value={task?.proxyProfile} onChange={handleChange} className="net_select" id="proxyProfile" required>
+                            <select value={task?.proxyProfile} onChange={handleChange} className="net_select" id="proxyProfile" required={true}>
                             <option value="">Выбрать...</option>
                             {Object.keys(proxyProfiles).map((profile:string,index)=><option key={index} value={profile}>{profile}</option>)}
                             </select>

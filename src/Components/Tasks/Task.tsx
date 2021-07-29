@@ -18,7 +18,7 @@ const Task = (props:{id:string,callEdit:Function})=>{
     const tasks:{[key:string]:ShopifyTaskInterface} = useSelector((state:any)=>state.tasks)
     let handleDelete =()=>{
       dispatch({type:RUN_STOP_TASK,payload:{taskId:props.id,isRun:false}})
-      dispatch({type:REMOVE_TASK,payload:{...tasks[props.id]}})
+      dispatch({type:REMOVE_TASK,payload:{...tasks[props.id],id:props.id}})
     }
     let handleEdit = (id:string)=>{
       props.callEdit(id)

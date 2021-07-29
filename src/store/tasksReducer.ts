@@ -33,6 +33,7 @@ export const tasksReducer = (state = defaultState ,action:ActionType)=>{
             localStorage.setItem("tasks",JSON.stringify(currentStorage))
             return currentState
         case REMOVE_TASK:
+            // console.log("aboba")
             currentState = {...state}
             currentStorage = {...JSON.parse(localStorage.getItem('tasks')||"{}")}
             delete currentState[action.payload.id]
