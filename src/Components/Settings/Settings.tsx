@@ -10,7 +10,11 @@ import { Dispatch } from 'redux'
 import { AUTHSERVER } from '../../index'
 
 
-export const logout = ()=>
+const Settings = () => {
+  const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
+  const settingsStorage = useSelector((state:any)=>state.settings)
+  const [settings, setSettings] = useState(settingsStorage)
+  const logout = ()=>
     fetch(`${AUTHSERVER}/auth/logout`, {
         "headers": {
             "accept": "*/*",
@@ -37,12 +41,6 @@ export const logout = ()=>
         }
         else throw new Error("Failed to log out")
     }).catch((e:any)=>console.log(e))
-
-
-const Settings = () => {
-  const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
-  const settingsStorage = useSelector((state:any)=>state.settings)
-  const [settings, setSettings] = useState(settingsStorage)
   const logoutHandler = (event:FormEvent)=>{
     event.preventDefault()
     logout()

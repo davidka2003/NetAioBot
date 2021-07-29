@@ -480,8 +480,6 @@ export class ShopifyMonitor{
     ){
     }
     Parse = async ()=>{
-        console.log(1);
-        
         try {
             let response = await request.get(this.url+'/products.json?limit=99999',{json:true,proxy:Change(this.url,"noProxy")}).catch(()=>null)
             let products = KeySwap(response)
@@ -493,6 +491,7 @@ export class ShopifyMonitor{
                 let Include = (name:string) => products[item]["title"].toLocaleLowerCase().includes(name);
                 // console.log(products[item].title)
                     for(let task in tasks){
+                        // console.log(tasks[task])
                         /* Generating bypass block */
                         // !tasks[task].checkoutsBypass?.[this.url]?tasks[task]?.checkoutsBypass[this.url]={}:null
                         if (

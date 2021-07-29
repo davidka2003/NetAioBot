@@ -26,7 +26,8 @@ export const tasksReducer = (state = defaultState ,action:ActionType)=>{
             // Object.keys(SITES).forEach(site=>checkoutsBypass[site]={})
             let currentTasks = {}
             for(let i =0; i<action.payload.__taskNumber;i++) {
-                currentTasks = {...currentTasks,[id()]:{...action.payload,checkouts:{},checkoutsBypass,isRun:false}}
+                let taskId = id()
+                currentTasks = {...currentTasks,[taskId]:{...action.payload,checkouts:{},checkoutsBypass,isRun:false,id:taskId}}
             }
             currentStorage = {...JSON.parse(localStorage.getItem('tasks')||"{}"),...currentTasks}
             currentState = {...state,...currentTasks}
@@ -53,6 +54,8 @@ export const tasksReducer = (state = defaultState ,action:ActionType)=>{
             return currentState
         case ADD_CHECKOUT_BYPASS:
             currentState = {...state}
+            // console.log(action.payload)
+            // console.log(currentState[action.payload.taskId])
             !currentState[action.payload.taskId].checkoutsBypass[action.payload.url/*  */]?currentState[action.payload.taskId].checkoutsBypass[action.payload.url/*  */]={}:null
             currentState[action.payload.taskId].checkoutsBypass[action.payload.url/*  */][action.payload.checkoutBypassId] = {
                 bypass:action.payload.checkoutBypass,

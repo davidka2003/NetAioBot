@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ProfileInterface, ShopifyTaskInterface } from '../../Interfaces/interfaces'
 import { sizes } from './AddTask'
 import { Dispatch } from 'redux'
+import { ADD_TASK } from '../../store/tasksReducer'
 
 const AddTaskShopify = () => {
     const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
@@ -50,7 +51,7 @@ const AddTaskShopify = () => {
     }
     let handlerCreate = (event:FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        dispatch({type:"ADD_TASK",payload:{...task,shop:"shopify",currentCheckoutState:{level:"LOW",state:"not started"}}})
+        dispatch({type:ADD_TASK,payload:{...task,shop:"shopify",currentCheckoutState:{level:"LOW",state:"not started"}}})
 
     }
     return (
