@@ -68,7 +68,7 @@ const Tasks = () => {
     dispatch({type:EDIT_ALL_CHECKOUTS_STATE,payload:{message:{level:"LOW",state:"started"}}})
     if(!Object.keys(tasks).filter(taskId=>tasks[taskId].isRun&&tasks[taskId].shop=='shopify'==true).length) {
       for (let url of Object.keys(SITES)) new ShopifyMonitor(url).Parse()
-    }
+    }/* add for solebox */
 dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
   }
   const handleStopAll = ()=>{

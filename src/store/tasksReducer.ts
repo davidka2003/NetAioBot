@@ -11,7 +11,7 @@ export const REMOVE_ALL_TASKS = "REMOVE_ALL_TASKS"
 export const ADD_CHECKOUT_BYPASS = "ADD_CHECKOUT_BYPASS"
 export const USE_CHECKOUT_BYPASS = "USE_CHECKOUT_BYPASS"
 export const EDIT_ALL_CHECKOUTS_STATE = "EDIT_ALL_CHECKOUTS_STATE"
-export const defaultState:{[key:string]:ShopifyTaskInterface} = JSON.parse(localStorage.getItem('tasks')!)||{}
+export const defaultState:{[key:string]:ShopifyTaskInterface|SoleboxTaskInterface} = JSON.parse(localStorage.getItem('tasks')!)||{}
 const {SITES} = require('../scripts/shopify/shopifyConfig.json')
 import {ActionType} from '.'
 import { ShopifyTaskInterface, SoleboxTaskInterface } from '../Interfaces/interfaces'
@@ -22,7 +22,7 @@ export const tasksReducer = (state = defaultState ,action:ActionType)=>{
     let currentState:typeof state
     // let checkoutsBypass=<any>{}
     let currentStorage=<any>{}
-    let currentTasks = <{[key:string]:ShopifyTaskInterface}>{}
+    let currentTasks = <{[key:string]:ShopifyTaskInterface|SoleboxTaskInterface}>{}
     // let checkoutsBypass=<any>{}
     switch (action.type){
         case ADD_SOLEBOX_TASK:
@@ -49,6 +49,7 @@ export const tasksReducer = (state = defaultState ,action:ActionType)=>{
             localStorage.setItem("tasks",JSON.stringify(currentStorage))
             return currentState
         case REMOVE_TASK:
+            
             // console.log("aboba")
             currentState = {...state}
             currentStorage = {...JSON.parse(localStorage.getItem('tasks')||"{}")}
@@ -71,6 +72,7 @@ export const tasksReducer = (state = defaultState ,action:ActionType)=>{
             currentState = {...state}
             // console.log(action.payload)
             // console.log(currentState[action.payload.taskId])
+            
             !currentState[action.payload.taskId].checkoutsBypass?.[action.payload.url/*  */]?currentState[action.payload.taskId].checkoutsBypass![action.payload.url/*  */]={}:null
             currentState[action.payload.taskId].checkoutsBypass![action.payload.url/*  */][action.payload.checkoutBypassId] = {
                 bypass:action.payload.checkoutBypass,

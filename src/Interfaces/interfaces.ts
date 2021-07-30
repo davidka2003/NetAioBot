@@ -1,6 +1,7 @@
 // import { ShopifyTask } from "./AddTask/AddTaskShopify";
 
 import { BypassQueueLink, Checkout } from "../scripts/shopify/shopify";
+import { SoleboxCheckout } from "../scripts/solebox/solebox";
 
 export interface ActionInterface{
     type:string,
@@ -13,7 +14,9 @@ export interface ProxyProfileInterface{
 }
 export interface ShopifyTaskInterface{
     isCustomSizes?:boolean,
-    sizes:any,
+    sizes:{
+        [size:string]:boolean
+    },
     __taskNumber:number,
     profile?:string,
     mode?:string,
@@ -46,14 +49,19 @@ export interface ShopifyTaskInterface{
 
 export interface SoleboxTaskInterface{
     isCustomSizes?:boolean,
-    sizes:any,
+    sizes:{
+        [size:string]:boolean
+    },
     __taskNumber:number,
     profile?:string,
     mode?:string,
     checked?:boolean,
     url?:string
     id?:string,
-    checkouts?:{},
+    checkoutsBypass?:/* no need */never,
+    checkouts?:{
+        [id:string]:SoleboxCheckout
+    },
     currentCheckoutState?:{
         state:string,
         level:  "LOW"|"ERROR"|"SUCCESS"
@@ -66,23 +74,23 @@ export interface SoleboxTaskInterface{
 }
 
 export interface ProfileInterface{
-    profileName?:string,
-    firstName?:string,
-    lastName?:string,
-    email?:string,
-    address1?:string,
-    address2?:string,
-    city?:string,
-    country?:string,
-    province?:string,
-    postCode?:string,
-    cardNumber?:string,
-    cardHolderName?:string,
-    month?:string,
-    year?:string,
-    cvv?:string,
-    phone?:string,
-}
+    profileName:string,
+    firstName:string,
+    lastName:string,
+    email:string,
+    address1:string,
+    address2:string,
+    city:string,
+    country:string,
+    province:string,
+    postCode:string,
+    cardNumber:string,
+    cardHolderName:string,
+    month:string,
+    year:string,
+    cvv:string,
+    phone:string,
+}/* Removed ? */
 export interface ContextPattern{
     profiles?:{
         profileName?:string,

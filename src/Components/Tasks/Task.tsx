@@ -6,6 +6,7 @@ import console from 'console'
 import './tasks.global.scss'
 import { ShopifyTaskInterface, SoleboxTaskInterface } from '../../Interfaces/interfaces'
 import { Dispatch } from 'redux'
+import { SoleboxCheckout, SoleBoxMonitor } from '../../scripts/solebox/solebox'
 export const LOW = "blue"
 export const ERROR = "red"
 export const SUCCESS = "green"
@@ -33,6 +34,9 @@ const Task = (props:{id:string,callEdit:Function})=>{
           break
         case 'solebox':
           console.log('solebox')
+          new SoleBoxMonitor(tasks[props.id].url).Parse().then(console.log)
+          // console.log()
+          // new SoleBoxCheckout(props.id,tasks[props.id].profile!,{email:"d4v1ds0n.p@gmail.com",password:"Dav20030204"},tasks[props.id].url,'44')
           break
         default:
           throw new Error("There is now such shop")
