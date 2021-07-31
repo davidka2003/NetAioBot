@@ -34,7 +34,7 @@ const Proxy = () => {
           if (proxy.length) {
             //   console.log(proxy,proxy.split(/https:\/\/|http:\/\/|:|@/g))
               const [login,password,ip,port] = proxy.split(/https:\/\/|http:\/\/|:|@/g).filter(chunk=>chunk?.length)
-              return "http://"+login+":"+password+"@"+ip+":"+port                
+              return "http://"+login+":"+password+"@"+ip+":"+port
           }return
         }).filter(proxy=>proxy)
         return dispatch({type:ADD_PROXY_PROFILE,payload:{
@@ -44,9 +44,8 @@ const Proxy = () => {
     }
     return (
       <div className="tab-pane fade" id="v-pills-proxies" role="tabpanel" aria-labelledby="v-pills-proxies-tab">
-        <br />
         <div className="container">
-          <h4 className="mb-3 ">Сохраненные прокси</h4>
+          <h4 className="mb-3 mt-3">Saved proxies</h4>
           <table className="table table-striped col">
             <thead>
               <tr>
@@ -76,7 +75,7 @@ const Proxy = () => {
                             </button> */}
                         </div>
                         </td>
-                    </tr>                  
+                    </tr>
                 ))
                 }
             </tbody>

@@ -20,6 +20,12 @@ $primary_input_background_color: #6E6E6E;
   }
 }
 
+.card {
+  .net_input{
+    border: 1px solid $primary_color;
+  }
+}
+
 .net_select{
   border-radius: $default_border_radius;
   color: $primary_color;

@@ -9,7 +9,7 @@ const AddTask = () => {
         <div className="tab-pane fade" id="v-pills-addtasks" role="tabpanel" aria-labelledby="v-pills-addtasks-tab">
         <div className="container">
             <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
-            <div className="carousel-inner">
+            <div className="carousel-inner mt-3">
                 <div className="carousel-item active">
                     <AddTaskShopify/>
                 </div>

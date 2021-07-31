@@ -35,7 +35,7 @@ const Profiles = () => {
     return (
         <div className="tab-pane fade" id="v-pills-profiles" role="tabpanel" aria-labelledby="v-pills-profiles-tab">
             <div className="container">
-                <h4 className="mb-3">Сохраненные профили</h4>
+                <h4 className="mb-3 mt-3">Saved Profiles</h4>
                 <table className="table table-striped col">
                 <thead>
                     <tr>

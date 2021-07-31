@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react'
 import NavPills from './Components/Navigation/NavPills'
 import Tasks from './Components/Tasks/Tasks'

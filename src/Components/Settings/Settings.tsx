@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { EDIT_SETTINGS } from '../../store/settingsReducer'
 import { Dispatch } from 'redux'
 import { AUTHSERVER } from '../../index'
+import mainLogo from '../../images/logo.svg'
 
 
 const Settings = () => {
@@ -65,7 +66,7 @@ const Settings = () => {
         <br />
         <div className="container row">
           <div className="col-3">
-            <img src="./images/logo 150px .jpg" className="rounded" alt="..." />
+            <img src={mainLogo} className="rounded" alt="..." />
           </div>
           <form onSubmit={handleSubmit} className="col-8">
             <h2 className="">Settings</h2>
