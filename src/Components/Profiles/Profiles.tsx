@@ -40,9 +40,9 @@ const Profiles = () => {
                 <thead>
                     <tr>
                     {/* <th>№</th> */}
-                    <th>Название</th>
-                    <th>Страна доставки</th>
-                    <th>Действие</th>
+                    <th>Profile</th>
+                    <th>Country</th>
+                    <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="profilesTable">

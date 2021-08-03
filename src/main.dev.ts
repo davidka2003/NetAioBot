@@ -11,7 +11,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, autoUpdater ,ipcMain, shell,dialog } from 'electron';
+import { app, BrowserWindow, autoUpdater ,ipcMain, shell,dialog,Notification } from 'electron';
 // import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -106,7 +106,7 @@ const createLogoutWindow = async () => {
   });
   _logoutWindow.loadURL(`file://${__dirname}/index.html?viewLogout`);
   _logoutWindow.on('show',_logoutWindow.hide)
-  
+
 };
 
 const createMainWindow = async () => {
@@ -273,6 +273,9 @@ ipcMain.on('deleteKey',()=>KEY = '')
 ipcMain.on('login',()=>{createMainWindow();/* if(loginWindow)loginWindow.close(); */})
 ipcMain.on('logout',()=>{createLoginWindow()/* ;if(mainWindow)mainWindow.close() */;})
 ipcMain.on('onCloseLogoutSuccess',app.quit)
-
+ipcMain.on('notify',(event,type:Electron.NotificationConstructorOptions)=>{
+    return new Notification(type).show()
+  }
+)
 
 

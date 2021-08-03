@@ -5,6 +5,7 @@ import {v4 as id} from 'uuid'
 import { ProfileInterface, ShopifyTaskInterface } from "../../Interfaces/interfaces";
 import { ADD_CHECKOUT, ADD_CHECKOUT_BYPASS, EDIT_CHECKOUT_STATE, USE_CHECKOUT_BYPASS } from "../../store/tasksReducer";
 import { checkForCaptcha } from "./modules";
+import { ipcRenderer } from "electron";
 const cheerio = require('cheerio')
 const { SITES } = require('./shopifyConfig.json');
 const request = require('cloudscraper')
@@ -165,7 +166,7 @@ export class Checkout{
             if(!bypasses[bypass].used&&bypasses[bypass].bypass.getBypass.checkoutUrl.length){
                 this.checkoutUrl = bypasses[bypass].bypass.getBypass.checkoutUrl
                 this.cookieJar = bypasses[bypass].bypass.getBypass.cookieJar
-                store.dispatch({type:USE_CHECKOUT_BYPASS,payload:{checkoutBypassId:bypass,taskId}})
+                store.dispatch({type:USE_CHECKOUT_BYPASS,payload:{checkoutBypassId:bypass,taskId,url:this.url}})
                 break
             }
         }
@@ -235,6 +236,7 @@ export class Checkout{
                 switch (true) {
                     case this.checkoutUrl.includes("stock_problems"):
                         console.log("stock_problems")
+                        editCheckoutState(this.taskId,{level:'ERROR',state:`Stock problems`})  
                         if (getTasks()[this.taskId].retryOnFailure) return this.AddToCart()
                         return
                         // return await this.AddToCart()
@@ -244,8 +246,10 @@ export class Checkout{
                         return
                     case this.checkoutUrl.includes("checkpoint"):
                         console.log("checkpoint")
+                        editCheckoutState(this.taskId,{level:'LOW',state:`Checkpoint\nSolving catcha`})  
                         let captchaHeader = await checkForCaptcha(response)
                         if (Object.keys(captchaHeader).length) {
+                            editCheckoutState(this.taskId,{level:'LOW',state:`Checkpoint\nCaptcha successfully solved`})  
                             let form = {
                                 "authenticity_token":this.authenticity_token,
                                 "data_via":"cookie",
@@ -279,6 +283,7 @@ export class Checkout{
                         break;                    
                     case this.checkoutUrl.includes("throttle"):
                         console.log("queue")
+                        editCheckoutState(this.taskId,{level:'LOW',state:`You are in queue`})  
                         await request.get(`${this.url}/throttle/queue`,{
                             headers: request.defaultParams.headers,
                             followRedirect:true,
@@ -295,6 +300,7 @@ export class Checkout{
                             })    
                         break;                    
                     case this.checkoutUrl.includes("cart"):
+                        editCheckoutState(this.taskId,{level:'ERROR',state:`Something went wrong\nRedirected to cart`})  
                         console.log("cart")
                         if (getTasks()[this.taskId].retryOnFailure) return this.AddToCart()
                         return
@@ -308,6 +314,7 @@ export class Checkout{
 
             }).catch(console.log)
             if (this.stop) return//**dispatch error state */
+            editCheckoutState(this.taskId,{level:"LOW",state:`Redirected to checkout`})
             return await this.ShippingConfirm()
 
     }
@@ -377,6 +384,7 @@ export class Checkout{
         // ship = JSON.parse(ship);
         if(!ship?.shipping_rates.length){
             console.log("Unavailable to ship")
+        editCheckoutState(this.taskId,{level:'ERROR',state:`Unavailable to ship`})
             if (getTasks()[this.taskId].retryOnFailure) return this.ShippingConfirm()
             return
         }
@@ -406,7 +414,8 @@ export class Checkout{
             followAllRedirects:true,
             jar:this.cookieJar
             }).catch(console.log)
-            return await this.ConfirmPayment();
+        editCheckoutState(this.taskId,{level:"LOW",state:`Shipping confirmed`})
+        return await this.ConfirmPayment();
     }
     async ConfirmPayment(){
         if (this.stop) return//**dispatch error state */
@@ -438,6 +447,7 @@ export class Checkout{
             jar:this.cookieJar
             }).catch(console.log))?.id;
         console.log(paymentToken) 
+        editCheckoutState(this.taskId,{level:"LOW",state:`Opened payment session`})
         if (this.stop) return//**dispatch error state */
         await request.post(this.checkoutUrl, {
             "headers": {
@@ -458,7 +468,14 @@ export class Checkout{
             followAllRedirects:true,
             jar:this.cookieJar,
             resolveWithFullResponse: true 
-            }).then((_r:any)=>editCheckoutState(this.taskId,{level:"SUCCESS",state:"Transaction completed"})).catch(console.log)
+            }).then((_r:any)=>{
+                editCheckoutState(this.taskId,{level:"SUCCESS",state:"Transaction completed"})
+                ipcRenderer.send("notify",{
+                    title:"SUCCESS",
+                    body:`successfully cheked out\n${this.url}\n${this.title}`,
+                    sound:'low',
+                  })
+            }).catch(console.log)
         // console.log(await request.get(this.checkoutUrl+'/processing',{
         //     proxy:Change(this.url,this.proxyProfile),
         //     headers:request.defaultParams.headers,

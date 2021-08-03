@@ -70,7 +70,7 @@ const Settings = () => {
           </div>
           <form onSubmit={handleSubmit} className="col-8">
             <h2 className="">Settings</h2>
-            <h6 className="">Captha Key</h6>
+            <h6 className="">AntiCaptha key</h6>
             <input onChange={handleChange} value={settings?.captchaKey} className="net_input" type="text"  id="captchaKey" /* required */ />
             <button type="submit" className="net_button_primary" id="saveSettings">Save</button>
           </form>

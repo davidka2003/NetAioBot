@@ -50,9 +50,9 @@ const Proxy = () => {
             <thead>
               <tr>
                 {/* <th>№</th> */}
-                <th>Название</th>
-                <th>Проки</th>
-                <th>Действие</th>
+                <th>Profile</th>
+                <th>Proxy</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody id="proxiesTable">
@@ -81,7 +81,7 @@ const Proxy = () => {
             </tbody>
           </table>
           <br />
-          <h4 className="">Добавить прокси
+          <h4 className="">Add proxy
             <button className="icon_button" data-bs-toggle="modal" data-bs-target="#proxyInfo">
               <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} className="bi bi-info-lg" viewBox="0 0 16 16">
                 <path d="m10.277 5.433-4.031.505-.145.67.794.145c.516.123.619.309.505.824L6.101 13.68c-.34 1.578.186 2.32 1.423 2.32.959 0 2.072-.443 2.577-1.052l.155-.732c-.35.31-.866.434-1.206.434-.485 0-.66-.34-.536-.939l1.763-8.278zm.122-3.673a1.76 1.76 0 1 1-3.52 0 1.76 1.76 0 0 1 3.52 0z" />
@@ -90,24 +90,24 @@ const Proxy = () => {
           </h4>
           <form onSubmit={submitHandler} className="needs-validation">
             <label htmlFor="#proxyName">Proxy profile name</label>
-            <input onChange={changeHandler} type="text" id="profileName" required={true}/>
-            <textarea onChange={changeHandler} className="form-control" style={{height: '200px'}} aria-label="With textarea" id="proxy" defaultValue={""} required={true} />
+            <input className="net_input" onChange={changeHandler} type="text" id="profileName" required={true}/>
+            <textarea onChange={changeHandler} className="form-control" style={{height: '200px'}} placeholder="Add proxy or proxies in (login password host port) format" aria-label="With textarea" id="proxy" defaultValue={""} required={true} />
             <br />
-            <button className="net_button_primary" id="addProxy" type="submit">Сохранить</button>
+            <button className="net_button_primary" id="addProxy" type="submit">Save</button>
           </form>
         </div>
         <div className="modal fade" id="proxyInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
           <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="staticBackdropLabel">В каком виде добавлять прокси</h5>
+                <h5 className="modal-title" id="staticBackdropLabel">Proxy format</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
               </div>
               <div className="modal-body">
-                ...
+              "Add proxy or proxies in (login password host port) format"
               </div>
               <div className="modal-footer">
-                <button type="button" className="net_button_secondary" data-bs-dismiss="modal">Понятно</button>
+                <button type="button" className="net_button_secondary" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
           </div>

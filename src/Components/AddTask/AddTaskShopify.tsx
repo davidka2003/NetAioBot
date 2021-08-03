@@ -64,11 +64,11 @@ const AddTaskShopify = () => {
                         <h4 className="">Filters</h4>
                         <div className="col">
                             <label htmlFor="positive" className="form-label ">Positive</label>
-                            <input onChange={handleChange} value={task?.positive?.join("|")} type="text" className="net_input" id="positive" required />
+                            <input onChange={handleChange} value={task?.positive?.join("|")} type="text" className="net_input" id="positive" placeholder="jordan 1|chicago|retro" required />
                         </div>
                         <div className="col">
                             <label htmlFor="negative" className="form-label ">Negative</label>
-                            <input onChange={handleChange} value={task?.negative?.join("|")} type="text" className="net_input" id="negative" required />
+                            <input onChange={handleChange} value={task?.negative?.join("|")} placeholder="mid|low" type="text" className="net_input" id="negative" required />
                         </div>
                         </div>
                         <div className="col mb-4">
@@ -104,7 +104,7 @@ const AddTaskShopify = () => {
                         <div className="col-4">
                             <label htmlFor="profile" className="form-label ">Profile</label>
                             <select value={task?.profile} onChange={handleChange} className="net_select" id="profile" required={true}>
-                            <option value="">Выбрать...</option>
+                            <option value="">Select...</option>
                             {
                                 Object.keys(profiles||{})?.map((profile,index)=>{
                                     return(
@@ -117,15 +117,15 @@ const AddTaskShopify = () => {
                         <div className="col-4">
                             <label htmlFor="mode" className="form-label ">Mode</label>
                             <select value={task?.mode} onChange={handleChange} className="net_select" id="mode" required={true}>
-                                <option value="">Выбрать...</option>
+                                <option value="">Select...</option>
                                 <option>release</option>
                                 <option>24/7</option>
                             </select>
                         </div>
                         <div className="col-4">
-                            <label htmlFor="proxyProfile" className="form-label ">Прокси</label>
+                            <label htmlFor="proxyProfile" className="form-label ">Proxy</label>
                             <select value={task?.proxyProfile} onChange={handleChange} className="net_select" id="proxyProfile" required={true}>
-                                <option value="">Выбрать...</option>
+                                <option value="">Select...</option>
                                 {Object.keys(proxyProfiles).map((profile:string,index)=><option key={index} value={profile}>{profile}</option>)}
                             </select>
                         </div>

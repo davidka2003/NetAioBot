@@ -13,10 +13,10 @@ const AddTask = () => {
                 <div className="carousel-item active">
                     <AddTaskShopify/>
                 </div>
-                <div className="carousel-item">
+                {/* <div className="carousel-item">
                     <AddTaskSolebox/>
-                </div>
-                <div className="carousel-item">
+                </div> */}
+                <div hidden /* className="carousel-item" */>
                 <div className="container row">
                     <div className="container col-1" />
                     <div className="container col-10">

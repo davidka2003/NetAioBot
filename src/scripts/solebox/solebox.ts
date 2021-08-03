@@ -1,14 +1,18 @@
 const request = require('cloudscraper');
 import cheerio from 'cheerio';
-
 import { ProfileInterface, SoleboxTaskInterface } from "../../Interfaces/interfaces";
 import { store } from "../../store";
 import { EDIT_CHECKOUT_STATE } from '../../store/tasksReducer';
+const {sizing} = require('./soleboxCongig.json')
+
+
+
+
 const getProxy = (proxyProfile:string):string[]=>store.getState().proxy[proxyProfile].proxy
-const getTasks = ():{[key:string]:SoleboxTaskInterface}=>{
+const getTasks = ():{[taskId:string]:SoleboxTaskInterface}=>{
     let tasks = store.getState().tasks
     let soleboxTasks = {}
-    Object.keys(tasks).filter(task=>tasks[task].shop=='shopify').forEach(taskId=>soleboxTasks = {...soleboxTasks,[taskId]:tasks[taskId]})
+    Object.keys(tasks).filter(task=>tasks[task].shop=='solebox').forEach(taskId=>soleboxTasks = {...soleboxTasks,[taskId]:tasks[taskId]})
     return soleboxTasks
 }
 const getProfile = (profile:string):ProfileInterface=>store.getState().profiles[profile]
@@ -77,7 +81,9 @@ export class SoleboxCheckout{
             password:string
         },
         readonly url:string,
-        readonly size:string
+        readonly size:string,
+        readonly fromMonitor = false,
+        readonly sizes = {}
     ){
         
         this.Login()
@@ -115,15 +121,23 @@ export class SoleboxCheckout{
     }
     async AddToCart(){
         let sizes:{[pid:string]:any} = {}
-        let $ = cheerio.load(await request.get(this.url))
-        let pid = $('button[data-pid]').attr('data-pid')||''
-        sizes[pid] = {}
-        $('.b-swatch-value-wrapper').toArray().forEach(element=>{
-            const url = $(element).find('a')?.attr('data-href')
-            const [id,size]= [url?.split('&dwvar_')[1].split('_')[1].split('=')[0]||'',url?.split('&dwvar_')[1].split('_')[1].split('=')[1]||'']
-            sizes[pid][size]=[[{'optionId':id,'selectedValueId':size}],url]
-            console.log(id,size)
-        })
+        let pid:string=''
+        if (!this.fromMonitor) {
+            let $ = cheerio.load(await request.get(this.url))
+            pid = $('button[data-pid]').attr('data-pid')||''
+            sizes[pid] = {}
+            $('.b-swatch-value-wrapper').toArray().forEach(element=>{
+                const url = $(element).find('a')?.attr('data-href')
+                const [id,size]= [url?.split('&dwvar_')[1].split('_')[1].split('=')[0]||'',url?.split('&dwvar_')[1].split('_')[1].split('=')[1]||'']
+                sizes[pid][size]=[[{'optionId':id,'selectedValueId':size}],url]
+                console.log(id,size)
+            })            
+        }
+        else {
+            /* pid no need?? */
+            sizes = this.sizes
+            pid = Object.keys(sizes)[0]
+        }
         let sizeId = (await request.get(`https://www.solebox.com${sizes[pid][this.size][1]}&format=ajax`, {
             headers,
             jar:this.jar,
@@ -251,13 +265,15 @@ export class SoleBoxMonitor{
                 })
                 return sizes     
             }
-        )
+        ).catch(console.log)
         for (const task of Object.keys(tasks)) {
             const taskSizes = Object.keys(tasks[task].sizes).filter(size=>tasks[task].sizes[size])
+            console.log(this.url)
             if (tasks[task].url==this.url) {
-                for (const size of Object.keys(sizes)) {
-                    if (taskSizes.includes(size)) {
+                for (const size in sizes[Object.keys(sizes)[0]]) {/* convert sizes add pid later as property */
+                    if (taskSizes.includes(sizing[size].US)) {
                         /* new checkout */
+                        new SoleboxCheckout(task,tasks[task].profile!,{email:"d4v1ds0n.p@gmail.com",password:"Dav20030204"},this.url,size,true,sizes)
                     }
                 }
             }

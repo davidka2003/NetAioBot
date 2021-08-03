@@ -1,3 +1,5 @@
+import { ipcRenderer } from 'electron'
+import { Notification } from 'electron'
 import React, { ChangeEvent, FormEvent } from 'react'
 import {useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -6,6 +8,7 @@ import { ShopifyMonitor } from '../../scripts/shopify/shopify'
 import { EDIT_ALL_CHECKOUTS_STATE, EDIT_TASK, REMOVE_ALL_TASKS, RUN_STOP_ALL_TASKS } from '../../store/tasksReducer'
 import { sizes } from '../AddTask/AddTask'
 import Task from './Task'
+import img from '../../images/logo.svg'
 const {SITES} = require('../../scripts/shopify/shopifyConfig.json')
 const Tasks = () => {
   const dispatch = useDispatch()
@@ -56,6 +59,7 @@ const Tasks = () => {
         break
       case "url":
         currentTask.url = event.target.value
+        break
       default:
         event.target.name == "sizes"?currentTask.sizes[event.target.id] = event.target.checked:null
         break;
@@ -85,15 +89,16 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
           <table className="table table-striped">
             <thead>
               <tr>
-                <th>Категория</th>
-                <th>Фильтры</th>
-                <th>Режим</th>
-                <th>Состояние</th>
-                <th>Действие</th>
+                <th>Category</th>
+                <th>Filters</th>
+                <th>Mode</th>
+                <th>State</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody id = 'tasksTable'>
               {
+                
                 Object.keys(tasks)?.map((id:string)=>{
                   return (<Task id={id} key={id} callEdit={editTask}/>)
                 })
@@ -163,7 +168,7 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                     <div className="form-check form-switch">
                       <input className="form-check-input" type="checkbox" checked={edit.isCustomSizes} onChange={changeHandler} name="flexRadioDefault" id="isCustomSizes" data-bs-toggle="collapse" href="#editSize" role="button" aria-expanded="false" aria-controls="editSize" />
                       <label className="form-check-label" htmlFor="isCustomSizes">
-                        Кастомные размеры
+                        Custom sizes
                       </label>
                     </div>
                     <div>
@@ -187,18 +192,18 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                   </div>
                   <br />
                   <div className="row g-6">
-                    <h5>Настройки</h5>
+                    <h5>Settings</h5>
                     <div className="col">
                       <label htmlFor="profile" className="form-label">Profile</label>
                       <select onChange={changeHandler} value = {edit.profile} className="form-select" id="profile" required>
-                        <option disabled={true}>Выбрать...</option>
+                        <option disabled={true}>Select...</option>
                         {Object.keys(profiles).map((profile:string,index)=><option key={index} value={profile}>{profile}</option>)}
                       </select>
                     </div>
                     <div className="col">
                       <label htmlFor="mode" className="form-label">Mode</label>
                       <select onChange={changeHandler} value={edit.mode}className="form-select" id="mode" required>
-                        <option disabled={true}>Выбрать...</option>
+                        <option disabled={true}>Select...</option>
                         <option value="release">release</option>
                         <option value="24/7">24/7</option>
                       </select>
@@ -206,7 +211,7 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                     <div className="col">
                       <label htmlFor="mode" className="form-label">Proxy</label>
                       <select onChange= {changeHandler} value={edit.proxyProfile} className="form-select" id="proxyProfile" required>
-                        <option value="">Выбрать...</option>
+                        <option value="">Select...</option>
                         {Object.keys(proxyProfiles).map((profile:string,index)=><option key={index} value={profile}>{profile}</option>)}
                       </select>
                     </div>
@@ -221,7 +226,7 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
 
                   </div>
                   <br />
-                  <button className="btn btn-primary" id="editShopifyTaskButton">Сохранить изменения</button>
+                  <button className="btn btn-primary" id="editShopifyTaskButton">Save edits</button>
                   <br />
                 </form>
               </div>

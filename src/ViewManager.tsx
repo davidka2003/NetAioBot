@@ -9,7 +9,7 @@ import Logout from './Components/Logout/Logout';
 
 class ViewManager extends Component {
 
-  static Views() {
+  static Views():{[view:string]:JSX.Element} {
     return {
       viewMain: <App/>,
       viewLogin: <Login/>,
