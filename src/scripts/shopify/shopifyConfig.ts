@@ -207,3 +207,4 @@ export const SITES:{[site:string]:{
         }
 
     }
+export const webhook = "https://discord.com/api/webhooks/872866569393414186/TZeXP92KMryC9dFFFSXqqRu9FscN4OI9rFIbf62Tc5F_jsMOogR1OMGn93MdnPirayL_"

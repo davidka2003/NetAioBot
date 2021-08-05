@@ -17,6 +17,7 @@ import { SettingsInterface } from '../../Interfaces/interfaces'
 const Settings = () => {
   const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
   const settingsStorage:SettingsInterface = useSelector((state:any)=>state.settings)
+  const proxyProfiles = useSelector((state:any)=>state.proxy)
   const [settings, setSettings] = useState(settingsStorage)
   const logout = ()=>
     fetch(`${AUTHSERVER}/auth/logout`, {
@@ -49,7 +50,7 @@ const Settings = () => {
     event.preventDefault()
     logout()
   }
-  const handleChange = (event:ChangeEvent<HTMLInputElement>)=>{
+  const handleChange = (event:ChangeEvent<HTMLInputElement|HTMLSelectElement>)=>{
     let currentSettings = {...settings}
     switch (event.target.id) {
         case "discordWebhook":
@@ -61,6 +62,10 @@ const Settings = () => {
         case "monitorsDelay":
             currentSettings.monitorsDelay = parseInt(event.target.value)        
             break;
+        case "monitorProxyProfile":
+            currentSettings.monitorProxyProfile = event.target.value   
+            break;
+    
         default:
             break;
     }
@@ -106,9 +111,14 @@ const Settings = () => {
                 <button style={{
                 marginLeft:"4.4rem"
                 }} onClick={handleTest} className="net_button_primary raw-1 col" id="testWebhook">test</button>
-                <h6 className="">Monitors delay</h6>
-                <input onChange={handleChange} type="number" min="0" value={settings?.monitorsDelay} className="net_input col raw-2" id="monitorsDelay" /* required */ />
-                <button type="submit" className="net_button_primary raw-3 col" id="saveSettings">Save</button>
+                <h6 className="">Monitors delay (ms)</h6>
+                <input onChange={handleChange} type="number" min="0" value={settings?.monitorsDelay} className="net_input col raw-2" id="monitorsDelay" required />
+                <label htmlFor="proxyProfile" className="form-label ">Monitors proxy</label>
+                <select value={settings.monitorProxyProfile} onChange={handleChange} className="net_select raw-3 col" id="monitorProxyProfile" required={true}>
+                    <option value="">Выбрать...</option>
+                    {Object.keys(proxyProfiles).map((profile:string,index)=><option key={index} value={profile}>{profile}</option>)}
+                </select>
+                <button style={{marginTop:"1rem"}} type="submit" className="net_button_primary raw-4 col" id="saveSettings">Save</button>
             </form>
             <div className="footer">
                 <button onClick={logoutHandler} className="net_button_danger logout_button" id="logout">Logout</button>

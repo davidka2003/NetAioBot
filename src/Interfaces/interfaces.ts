@@ -95,5 +95,6 @@ export interface ProfileInterface{
 export interface SettingsInterface{
     captchaKey?:string,
     discordWebhook?:string,
-    monitorsDelay:number
+    monitorsDelay:number,
+    monitorProxyProfile:string
 }

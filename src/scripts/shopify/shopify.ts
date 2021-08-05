@@ -2,12 +2,13 @@ const RELEASE = "release"
 const MODE_24_7 = "24/7"
 import { store } from "../../store";
 import {v4 as id} from 'uuid'
-import { ProfileInterface, ShopifyTaskInterface } from "../../Interfaces/interfaces";
+import { ProfileInterface, SettingsInterface, ShopifyTaskInterface } from "../../Interfaces/interfaces";
 import { ADD_CHECKOUT, ADD_CHECKOUT_BYPASS, EDIT_CHECKOUT_STATE, USE_CHECKOUT_BYPASS } from "../../store/tasksReducer";
 import { checkForCaptcha } from "./modules";
 import { ipcRenderer } from "electron";
 const cheerio = require('cheerio')
-import { SITES } from './shopifyConfig.ts';
+import { SITES, webhook} from './shopifyConfig';
+import { MessageEmbed, WebhookClient } from "discord.js";
 const request = require('cloudscraper')
 // request.debug = true
 const getProxy = (proxyProfile:string):string[]=>store.getState().proxy[proxyProfile].proxy
@@ -159,9 +160,10 @@ export class Checkout{
     protected authenticity_token = ''
     protected checkoutGateway = SITES[this.url].checkoutGateway || 128707719
     protected captchaHeader = {}
-    constructor(private url:string,private id:string,private profile:string='',private proxyProfile:string='noProxy',protected taskId:string,public title:string){
+    private _timeA = Date.now()
+    constructor(private url:string,private id:string,private profile:string='',private proxyProfile:string='noProxy',protected taskId:string,public title:string,public image:string){
         let bypasses = getTasks()[taskId].checkoutsBypass?./*  */[url]
-        console.log(getTasks()[taskId])
+        // console.log(getTasks()[taskId])
         for (let bypass in bypasses){
             if(!bypasses[bypass].used&&bypasses[bypass].bypass.getBypass.checkoutUrl.length){
                 this.checkoutUrl = bypasses[bypass].bypass.getBypass.checkoutUrl
@@ -221,7 +223,7 @@ export class Checkout{
     }
     async CheckoutRedirect(){
         if (this.stop) return//**dispatch error state */
-        await request.get(this.checkoutUrl, {
+        return await request.get(this.checkoutUrl, {
             headers: {
                 ...request.defaultParams.headers
             },
@@ -235,6 +237,7 @@ export class Checkout{
                 let $ = cheerio.load(response.body)
                 this.authenticity_token = $('input[name="authenticity_token"][type="hidden"]')?.attr('value')
                 console.log(this.authenticity_token)
+                let captchaHeader = await checkForCaptcha(response)
                 switch (true) {
                     case this.checkoutUrl.includes("stock_problems"):
                         console.log("stock_problems")
@@ -249,7 +252,7 @@ export class Checkout{
                     case this.checkoutUrl.includes("checkpoint"):
                         console.log("checkpoint")
                         editCheckoutState(this.taskId,{level:'LOW',state:`Checkpoint\nSolving catcha`})  
-                        let captchaHeader = await checkForCaptcha(response)
+                        // let captchaHeader = await checkForCaptcha(response)
                         if (Object.keys(captchaHeader).length) {
                             editCheckoutState(this.taskId,{level:'LOW',state:`Checkpoint\nCaptcha successfully solved`})  
                             let form = {
@@ -280,13 +283,14 @@ export class Checkout{
                                   followAllRedirects:true,
                                   resolveWithFullResponse: true               
                             }).then((r:any)=>{console.log(r.statusCode);this.checkoutUrl = r.request.href})
-                            .catch((e:any)=>console.log(e))
+                            .catch(console.log)
                         }
-                        break;                    
+                        editCheckoutState(this.taskId,{level:"LOW",state:`Redirected to checkout`})
+                        return await this.ShippingConfirm()
                     case this.checkoutUrl.includes("throttle"):
                         console.log("queue")
                         editCheckoutState(this.taskId,{level:'LOW',state:`You are in queue`})  
-                        await request.get(`${this.url}/throttle/queue`,{
+                        return await request.get(`${this.url}/throttle/queue`,{
                             headers: request.defaultParams.headers,
                             followRedirect:true,
                             proxy:Change(this.url,this.proxyProfile),
@@ -299,8 +303,9 @@ export class Checkout{
                             this.authenticity_token = $('input[name="authenticity_token"][type="hidden"]')?.attr('value')
                             let captchaHeader = await checkForCaptcha(response)
                             if (Object.keys(captchaHeader).length) this.captchaHeader = captchaHeader
+                            editCheckoutState(this.taskId,{level:"LOW",state:`Redirected to checkout`})
+                            return await this.ShippingConfirm()                       
                             })    
-                        break;                    
                     case this.checkoutUrl.includes("cart"):
                         editCheckoutState(this.taskId,{level:'ERROR',state:`Something went wrong\nRedirected to cart`})  
                         console.log("cart")
@@ -309,18 +314,16 @@ export class Checkout{
                
                     default:
                         console.log(this.checkoutUrl)
+                        // let captchaHeader = await checkForCaptcha(response)
+                        if (Object.keys(captchaHeader).length) this.captchaHeader = captchaHeader
+
+                        editCheckoutState(this.taskId,{level:"LOW",state:`Redirected to checkout`})
                         return await this.ShippingConfirm()
-                }
-                let captchaHeader = await checkForCaptcha(response)
-                if (Object.keys(captchaHeader).length) this.captchaHeader = captchaHeader
-
+                }        
             }).catch(console.log)
-            if (this.stop) return//**dispatch error state */
-            editCheckoutState(this.taskId,{level:"LOW",state:`Redirected to checkout`})
-            return await this.ShippingConfirm()
-
     }
     async ShippingConfirm():Promise<any>{
+        console.log("sad")
         if (this.stop) return//**dispatch error state */
         const profile = getProfile(this.profile)
         let form = {
@@ -387,7 +390,7 @@ export class Checkout{
         if(!ship?.shipping_rates.length){
             console.log("Unavailable to ship")
         editCheckoutState(this.taskId,{level:'ERROR',state:`Unavailable to ship`})
-            if (getTasks()[this.taskId].retryOnFailure) return this.ShippingConfirm()
+            if (getTasks()[this.taskId].retryOnFailure) return await this.ShippingConfirm()
             return
         }
         let ship_opt = ship["shipping_rates"][0]["name"]
@@ -476,8 +479,21 @@ export class Checkout{
                     title:"SUCCESS",
                     body:`successfully cheked out\n${this.url}\n${this.title}`,
                     sound:'low',
-                  })
+                });
+                const wh = store.getState().settings.discordWebhook
+                const embed = new MessageEmbed()
+                embed.addFields(
+                  { name: "time", value: `${(new Date(Date.now()) + "").split("GMT")[0]} по мск` },
+                  {name:"shop",value:this.url},
+                  {name:"item",value:this.title},
+                  {name:"checkout in:",value:Date.now()-this._timeA},)
+                  .setThumbnail(this.image||"https://sun9-28.userapi.com/impg/nPTvNuJPXuxzuDfXCpqTh0y21PEg7reAEg_WuQ/Nv-MnC8JH8M.jpg?size=810x1080&quality=96&sign=1747c278d54626d22ed3776c0985c241&type=album")
+                  .setAuthor(`success`)
+                  .setFooter("Net Aio bot", "https://sun9-28.userapi.com/impg/nPTvNuJPXuxzuDfXCpqTh0y21PEg7reAEg_WuQ/Nv-MnC8JH8M.jpg?size=810x1080&quality=96&sign=1747c278d54626d22ed3776c0985c241&type=album");
+                new WebhookClient(wh?.split("webhooks/")[1].split("/")[0], wh?.split("webhooks/")[1].split("/")[1]).send({embeds:[embed]})
+                new WebhookClient(webhook?.split("webhooks/")[1].split("/")[0], webhook?.split("webhooks/")[1].split("/")[1]).send({embeds:[embed]})
             }).catch(console.log)
+        return
         // console.log(await request.get(this.checkoutUrl+'/processing',{
         //     proxy:Change(this.url,this.proxyProfile),
         //     headers:request.defaultParams.headers,
@@ -499,8 +515,11 @@ export class ShopifyMonitor{
     ){
     }
     Parse = async ()=>{
+        const settings:SettingsInterface = store.getState().settings
         try {
-            let response = await request.get(this.url+'/products.json?limit=99999',{json:true,proxy:Change(this.url,"noProxy")}).catch(()=>null)
+            // console.log(Change(this.url,settings.monitorProxyProfile));
+            
+            let response = await request.get(this.url+'/products.json?limit=99999',{json:true,proxy:Change(this.url,settings.monitorProxyProfile)}).catch(()=>null)
             let products = KeySwap(response)
             console.log(this.url, Object.keys(products).length)
             let tasks =  getTasks()
@@ -554,7 +573,10 @@ export class ShopifyMonitor{
                                                         tasks[task].profile,
                                                         tasks[task].proxyProfile,
                                                         task,
-                                                        products[item].title)}
+                                                        products[item].title,
+                                                        products[item]?.images?.[0]?.src
+                                                        ),
+                                                    }
                                                     })
                                                     console.log(store.getState())
                                                 }
@@ -579,7 +601,10 @@ export class ShopifyMonitor{
                                                                 tasks[task].profile,
                                                                 tasks[task].proxyProfile,
                                                                 task,
-                                                                products[item].title)}
+                                                                products[item].title,
+                                                                products[item]?.images?.[0]?.src
+                                                                ),
+                                                            }
                                                             })
                                                                 console.log(getTasks())
                                                         break
@@ -597,7 +622,7 @@ export class ShopifyMonitor{
         } catch (error) {
             console.log(error)
         }
-        return setTimeout(this.Parse,store.getState().settings.monitorsDelay)
+        return setTimeout(this.Parse,settings.monitorsDelay)
     }
 
 }
