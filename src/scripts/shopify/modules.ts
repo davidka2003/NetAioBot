@@ -1,11 +1,11 @@
 import { store } from "../../store";
 
 const ac = require("@antiadmin/anticaptchaofficial");
-const AntiCaptchaApiKey = store.getState().settings.captchaKey
 const cheerio = require('cheerio');
-ac.setAPIKey(AntiCaptchaApiKey);
 
 export const checkForCaptcha = async (response:any)=>{
+    const AntiCaptchaApiKey = store.getState().settings.captchaKey
+    ac.setAPIKey(AntiCaptchaApiKey);/* ytoublrs mb */
     let respBody = cheerio.load(await response.body)
     let htmlString = respBody.html()
     let websitekey

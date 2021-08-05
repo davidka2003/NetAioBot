@@ -8,9 +8,9 @@ import { AUTHSERVER } from '../../index'
 
 const Login = () => {
     const [key, setkey] = useState(localStorage.getItem("key")||'')
+    const [dis, setdis] = useState(false)
     // let windows = remote.BrowserWindow.getAllWindows()
     // windows.forEach((window,id)=>window.show())
-
     const login = ()=>
     fetch(`${AUTHSERVER}/auth/login`, {
         "headers": {
@@ -38,10 +38,14 @@ const Login = () => {
 
             // main()
         }
-        else throw new Error("Failed to log in")
+        else {
+          setdis(false)
+          throw new Error("Failed to log in")
+        }
     }).catch((e:any)=>console.log(e))
     const loginHandler = (event:FormEvent)=>{
         event.preventDefault()
+        setdis(true)
         login()
     }
     return (
@@ -53,7 +57,7 @@ const Login = () => {
                   <img src={mainLogo} alt="" />
                   <input className='net_input' placeholder='your key' value={key} onChange={(event:ChangeEvent<HTMLInputElement>)=>setkey(event?.target.value)} id="key" type="text" />
                   <div className='text-center'>
-                    <button className='net_button_primary login_button' type="submit">Login</button>
+                    <button disabled={dis} className='net_button_primary login_button' type="submit">Login</button>
                   </div>
                 </div>
               </div>
