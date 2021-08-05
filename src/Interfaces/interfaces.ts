@@ -2,7 +2,7 @@
 
 import { BypassQueueLink, Checkout } from "../scripts/shopify/shopify";
 import { SoleboxCheckout } from "../scripts/solebox/solebox";
-
+import { SITES } from "../scripts/shopify/shopifyConfig";
 export interface ActionInterface{
     type:string,
     payload:any
@@ -43,7 +43,8 @@ export interface ShopifyTaskInterface{
     isRun:false,
     retryOnFailure:boolean,
     checkoutsAmount:1|number,
-    shop:"shopify",
+    shopType:"shopify",
+    shopUrl?:string
     proxyProfile?:string
 }
 
@@ -69,7 +70,7 @@ export interface SoleboxTaskInterface{
     isRun:false,
     retryOnFailure:boolean,
     checkoutsAmount:1|number,
-    shop:"solebox",
+    shopType:"solebox",
     proxyProfile?:string
 }
 
@@ -91,23 +92,8 @@ export interface ProfileInterface{
     cvv:string,
     phone:string,
 }/* Removed ? */
-export interface ContextPattern{
-    profiles?:{
-        profileName?:string,
-        firstName?:string,
-        lastName?:string,
-        email?:string,
-        address1?:string,
-        address2?:string,
-        city?:string,
-        country?:string,
-        province?:string,
-        postCode?:string,
-        cardNumber?:string,
-        cardHolderName?:string,
-        month?:string,
-        year?:string,
-        cvv?:string
-    }
-    tasks?:{string:ShopifyTaskInterface}
+export interface SettingsInterface{
+    captchaKey?:string,
+    discordWebhook?:string,
+    monitorsDelay:number
 }

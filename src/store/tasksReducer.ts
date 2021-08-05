@@ -12,12 +12,18 @@ export const ADD_CHECKOUT_BYPASS = "ADD_CHECKOUT_BYPASS"
 export const USE_CHECKOUT_BYPASS = "USE_CHECKOUT_BYPASS"
 export const EDIT_ALL_CHECKOUTS_STATE = "EDIT_ALL_CHECKOUTS_STATE"
 export const defaultState:{[key:string]:ShopifyTaskInterface|SoleboxTaskInterface} = JSON.parse(localStorage.getItem('tasks')!)||{}
-const {SITES} = require('../scripts/shopify/shopifyConfig.json')
+import { SITES } from '../scripts/shopify/shopifyConfig.ts'
 import {ActionType} from '.'
 import { ShopifyTaskInterface, SoleboxTaskInterface } from '../Interfaces/interfaces'
 
 let checkoutsBypass=<any>{}
 Object.keys(SITES).forEach(site=>checkoutsBypass[site]={})
+const shopifyDefaultStorage = {
+    currentCheckoutState: {level: "LOW", state: "not started"},
+    checkoutsBypass,
+    checkouts:{},
+    isRun: false
+}
 export const tasksReducer = (state = defaultState ,action:ActionType)=>{
     let currentState:typeof state
     // let checkoutsBypass=<any>{}
@@ -29,7 +35,7 @@ export const tasksReducer = (state = defaultState ,action:ActionType)=>{
             /* same as edit */
             for(let i =0; i<action.payload.__taskNumber;i++) {
                 let taskId = id()
-                currentTasks = {...currentTasks,[taskId]:{...action.payload,checkouts:{},isRun:false,id:taskId}}
+                currentTasks = {...currentTasks,[taskId]:{...action.payload,id:taskId,...shopifyDefaultStorage}}
             }
             currentStorage = {...JSON.parse(localStorage.getItem('tasks')||"{}"),...currentTasks}
             currentState = {...state,...currentTasks}
@@ -41,7 +47,7 @@ export const tasksReducer = (state = defaultState ,action:ActionType)=>{
             // Object.keys(SITES).forEach(site=>checkoutsBypass[site]={})
             for(let i =0; i<action.payload.__taskNumber;i++) {
                 let taskId = id()
-                currentTasks = {...currentTasks,[taskId]:{...action.payload,checkouts:{},checkoutsBypass,isRun:false,id:taskId}}
+                currentTasks = {...currentTasks,[taskId]:{...action.payload,id:taskId,...shopifyDefaultStorage}}
             }
             currentStorage = {...JSON.parse(localStorage.getItem('tasks')||"{}"),...currentTasks}
             // console.log(currentStorage)
@@ -62,7 +68,8 @@ export const tasksReducer = (state = defaultState ,action:ActionType)=>{
             // Object.keys(SITES).forEach(site=>checkoutsBypass[site]={})/* could be out of reducer */
             currentStorage = {...JSON.parse(localStorage.getItem('tasks')||"{}")}
             currentState = {...state, [action.payload.id]:action.payload}
-            localStorage.setItem("tasks",JSON.stringify({...currentStorage,[action.payload.id]:{...action.payload,checkoutsBypass,checkouts:{}}}))
+            console.log(checkoutsBypass)
+            localStorage.setItem("tasks",JSON.stringify({...currentStorage,[action.payload.id]:{...action.payload,...shopifyDefaultStorage}}))
             return currentState
         case ADD_CHECKOUT:
             currentState = {...state}
@@ -115,7 +122,7 @@ export const tasksReducer = (state = defaultState ,action:ActionType)=>{
         case RUN_STOP_ALL_TASKS:
             currentState = {...state}
             Object.keys(currentState).map(task=>{
-                if (currentState[task].shop=="shopify"){
+                if (currentState[task].shopType=="shopify"){
                     Object.keys(SITES).forEach(site=>!currentState[task].checkoutsBypass?.[site]?currentState[task].checkoutsBypass![site]={}:null)
                     Object.keys(currentState[task].checkoutsBypass!).map(site=>Object.keys(currentState[task].checkoutsBypass![site]).map(bypass=>currentState[task].checkoutsBypass![site][bypass].bypass.setStop=!action.payload.isRun))
                 }

@@ -12,7 +12,7 @@ const getProxy = (proxyProfile:string):string[]=>store.getState().proxy[proxyPro
 const getTasks = ():{[taskId:string]:SoleboxTaskInterface}=>{
     let tasks = store.getState().tasks
     let soleboxTasks = {}
-    Object.keys(tasks).filter(task=>tasks[task].shop=='solebox').forEach(taskId=>soleboxTasks = {...soleboxTasks,[taskId]:tasks[taskId]})
+    Object.keys(tasks).filter(task=>tasks[task].shopType=='solebox').forEach(taskId=>soleboxTasks = {...soleboxTasks,[taskId]:tasks[taskId]})
     return soleboxTasks
 }
 const getProfile = (profile:string):ProfileInterface=>store.getState().profiles[profile]

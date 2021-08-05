@@ -103,7 +103,7 @@ const AddProfiles = () => {
                     </div>
                     <div className="row gy-3">
                     <div className="col-12">
-                        <h4 className="mb-3">Оплата</h4>
+                        <h4 className="mb-3">Payment</h4>
                         <label htmlFor="cardNumber" className="form-label">Card number</label>
                         <input onChange={handleChange} value={profile.cardNumber} className='net_input' type="text" name="cardNumber" placeholder="4276550033333333" required />
                     </div>

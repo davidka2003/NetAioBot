@@ -1,5 +1,9 @@
-{
-    "SITES":{        
+export const SITES:{[site:string]:{
+    checkoutGateway:number,
+    extraHeaders:any,
+    available:boolean,
+    special:any
+}} = {        
         "https://nrml.ca":{
             "extraHeaders":{
                 "checkout[pick_up_in_store][selected]":false,
@@ -203,4 +207,3 @@
         }
 
     }
-}

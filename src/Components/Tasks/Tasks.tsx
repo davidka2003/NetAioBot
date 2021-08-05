@@ -9,14 +9,14 @@ import { EDIT_ALL_CHECKOUTS_STATE, EDIT_TASK, REMOVE_ALL_TASKS, RUN_STOP_ALL_TAS
 import { sizes } from '../AddTask/AddTask'
 import Task from './Task'
 import img from '../../images/logo.svg'
-const {SITES} = require('../../scripts/shopify/shopifyConfig.json')
+import { SITES } from '../../scripts/shopify/shopifyConfig.ts'
 const Tasks = () => {
   const dispatch = useDispatch()
   const tasks = useSelector((state:any)=>state.tasks)
   const proxyProfiles = useSelector((state:any)=>state.proxy)
   const profiles = useSelector((state:any)=>state.profiles)
   
-  const [edit, setedit] = useState<ShopifyTaskInterface|SoleboxTaskInterface>({isCustomSizes:false,__taskNumber:1,sizes:{},isRun:false,retryOnFailure:false,checkoutsAmount:1,shop:'shopify'})
+  const [edit, setedit] = useState<ShopifyTaskInterface|SoleboxTaskInterface>({isCustomSizes:false,__taskNumber:1,sizes:{},isRun:false,retryOnFailure:false,checkoutsAmount:1,shopType:'shopify'})
   const editTask = (id:string)=>{
     setedit({...tasks}[id])
 
@@ -25,7 +25,7 @@ const Tasks = () => {
     event.preventDefault()
     dispatch({type:EDIT_TASK,payload:{...edit}})
 }
-  const changeHandler = (event:ChangeEvent<HTMLInputElement>)=>{
+  const handleChange = (event:ChangeEvent<HTMLInputElement>)=>{
     // console.log(task)
     let currentTask = /* {...task} */{...edit}
     console.log(edit)
@@ -59,6 +59,9 @@ const Tasks = () => {
         break
       case "url":
         currentTask.url = event.target.value
+        break
+      case "shopUrl":
+        currentTask.shopUrl = event.target.value
         break
       default:
         event.target.name == "sizes"?currentTask.sizes[event.target.id] = event.target.checked:null
@@ -98,7 +101,6 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
             </thead>
             <tbody id = 'tasksTable'>
               {
-                
                 Object.keys(tasks)?.map((id:string)=>{
                   return (<Task id={id} key={id} callEdit={editTask}/>)
                 })
@@ -126,19 +128,29 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                 <form onSubmit={(event)=>saveEdited(event)} className="container needs-validation" id="editTaskForm">
                   {
                     (()=>{
-                      switch (edit.shop) {
+                      switch (edit.shopType) {
                         case "shopify":
                           return(
                             <div className="row g-6">
                             <h5>Filters</h5>
                             <div className="col">
                               <label htmlFor="positive" className="form-label">Positive</label>
-                              <input onChange={changeHandler} value={edit.positive?.join("|")} type="text" className="form-control" id="positive" required />
+                              <input onChange={handleChange} value={edit.positive?.join("|")} type="text" className="form-control" id="positive" required />
                             </div>
                             <div className="col">
                               <label htmlFor="negative" className="form-label">Negative</label>
-                              <input onChange={changeHandler} value={edit.negative?.join("|")} type="text" className="form-control" id="negative" required />
+                              <input onChange={handleChange} value={edit.negative?.join("|")} type="text" className="form-control" id="negative" required />
                             </div>
+                            <h5>Site</h5>
+                            <select style={{
+                              width:"80%",
+                              marginLeft:"12px"
+                            }} value={edit?.shopUrl} onChange={handleChange} className="form-select" id="shopUrl" required={true}>
+                                <option value="">Select...</option>
+                                {
+                                    Object.keys(SITES).sort((a, b) => a.localeCompare(b)).map(site=><option key={site}>{/* site.replace(/https:\/\/|https:\/\/|\//g,"") */site}</option>)
+                                }
+                            </select>
                           </div>
         
                           )
@@ -147,7 +159,7 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                             <div className="row g-6">
                             <div className="col">
                               <label htmlFor="url" className="form-label">Url</label>
-                              <input onChange={changeHandler} value={edit.url} type="text" className="form-control" id="url" required />
+                              <input onChange={handleChange} value={edit.url} type="text" className="form-control" id="url" required />
                             </div>
                           </div>
         
@@ -166,7 +178,7 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                       </label>
                     </div> */}
                     <div className="form-check form-switch">
-                      <input className="form-check-input" type="checkbox" checked={edit.isCustomSizes} onChange={changeHandler} name="flexRadioDefault" id="isCustomSizes" data-bs-toggle="collapse" href="#editSize" role="button" aria-expanded="false" aria-controls="editSize" />
+                      <input className="form-check-input" type="checkbox" checked={edit.isCustomSizes} onChange={handleChange} name="flexRadioDefault" id="isCustomSizes" data-bs-toggle="collapse" href="#editSize" role="button" aria-expanded="false" aria-controls="editSize" />
                       <label className="form-check-label" htmlFor="isCustomSizes">
                         Custom sizes
                       </label>
@@ -178,7 +190,7 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                                     sizes?.map((size:string,index)=>{
                                         return (
                                             <div className="form-check" key={index}>
-                                            <input onChange={changeHandler} className="form-check-input"  checked = {edit.sizes[size]} id={size} name="sizes" type="checkbox" />
+                                            <input onChange={handleChange} className="form-check-input"  checked = {edit.sizes[size]} id={size} name="sizes" type="checkbox" />
                                             <label className="form-check-label" htmlFor={size +'us'}>
                                                 {size} us
                                             </label>
@@ -195,14 +207,14 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                     <h5>Settings</h5>
                     <div className="col">
                       <label htmlFor="profile" className="form-label">Profile</label>
-                      <select onChange={changeHandler} value = {edit.profile} className="form-select" id="profile" required>
+                      <select onChange={handleChange} value = {edit.profile} className="form-select" id="profile" required>
                         <option disabled={true}>Select...</option>
                         {Object.keys(profiles).map((profile:string,index)=><option key={index} value={profile}>{profile}</option>)}
                       </select>
                     </div>
                     <div className="col">
                       <label htmlFor="mode" className="form-label">Mode</label>
-                      <select onChange={changeHandler} value={edit.mode}className="form-select" id="mode" required>
+                      <select onChange={handleChange} value={edit.mode}className="form-select" id="mode" required>
                         <option disabled={true}>Select...</option>
                         <option value="release">release</option>
                         <option value="24/7">24/7</option>
@@ -210,18 +222,18 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                     </div>
                     <div className="col">
                       <label htmlFor="mode" className="form-label">Proxy</label>
-                      <select onChange= {changeHandler} value={edit.proxyProfile} className="form-select" id="proxyProfile" required>
+                      <select onChange= {handleChange} value={edit.proxyProfile} className="form-select" id="proxyProfile" required>
                         <option value="">Select...</option>
                         {Object.keys(proxyProfiles).map((profile:string,index)=><option key={index} value={profile}>{profile}</option>)}
                       </select>
                     </div>
                     <div className="col">
                             <label htmlFor="checkoutsAmount" className="form-label">Checkouts per task amount</label>
-                            <input onChange={changeHandler} value={edit?.checkoutsAmount} type="number" min="1" max="100" className="form-control" id="checkoutsAmount" required />
+                            <input onChange={handleChange} value={edit?.checkoutsAmount} type="number" min="1" max="100" className="form-control" id="checkoutsAmount" required />
                         </div>
                     <div className="col">
                         <label htmlFor="retryOnFailure" className="form-label">Retry on failure</label>
-                        <input onChange={changeHandler} checked={edit?.retryOnFailure} type="checkbox" className="form-check-input" id="retryOnFailure" />
+                        <input onChange={handleChange} checked={edit?.retryOnFailure} type="checkbox" className="form-check-input" id="retryOnFailure" />
                     </div>
 
                   </div>

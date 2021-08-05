@@ -5,12 +5,13 @@ import { ProfileInterface, ShopifyTaskInterface } from '../../Interfaces/interfa
 import { sizes } from './AddTask'
 import { Dispatch } from 'redux'
 import { ADD_SHOPIFY_TASK } from '../../store/tasksReducer'
+import { SITES } from '../../scripts/shopify/shopifyConfig.ts'
 
 const AddTaskShopify = () => {
     const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
     const profiles:{[key:string]:ProfileInterface} = useSelector((state:any)=>state.profiles)
     const proxyProfiles = useSelector((state:any)=>state.proxy)
-    const [task, settask] = useState<ShopifyTaskInterface>({isCustomSizes:false,sizes:{},__taskNumber:1,checkoutsAmount:1,isRun:false,retryOnFailure:true,shop:"shopify"})
+    const [task, settask] = useState<ShopifyTaskInterface>({isCustomSizes:false,sizes:{},__taskNumber:1,checkoutsAmount:1,isRun:false,retryOnFailure:true,shopType:"shopify"})
     const handleChange = (event:ChangeEvent<HTMLInputElement&/* | */HTMLSelectElement>)=>{
         let currentTask = {...task}
         switch (event.target.id) {
@@ -41,6 +42,9 @@ const AddTaskShopify = () => {
                 break
             case "checkoutsAmount":
                 currentTask.checkoutsAmount = parseInt(event.target.value)
+                break
+            case "shopUrl":
+                currentTask.shopUrl = event.target.value
                 break
             default:
                 event.target.name == "sizes"?currentTask.sizes[event.target.id] = event.target.checked:null
@@ -120,6 +124,15 @@ const AddTaskShopify = () => {
                                 <option value="">Select...</option>
                                 <option>release</option>
                                 <option>24/7</option>
+                            </select>
+                        </div>
+                        <div className="col-4">
+                            <label htmlFor="shopUrl" className="form-label ">Site</label>
+                            <select value={task?.shopUrl} onChange={handleChange} className="net_select" id="shopUrl" required={true}>
+                                <option value="">Select...</option>
+                                {
+                                    Object.keys(SITES).sort((a, b) => a.localeCompare(b)).map(site=><option key={site}>{/* site.replace(/https:\/\/|https:\/\/|\//g,"") */site}</option>)
+                                }
                             </select>
                         </div>
                         <div className="col-4">

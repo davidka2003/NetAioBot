@@ -10,7 +10,7 @@ import { SoleboxCheckout, SoleBoxMonitor } from '../../scripts/solebox/solebox'
 export const LOW = "blue"
 export const ERROR = "red"
 export const SUCCESS = "green"
-const {SITES} = require('../../scripts/shopify/shopifyConfig.json')
+import { SITES } from '../../scripts/shopify/shopifyConfig.ts'
 const message = {
   LOW,ERROR,SUCCESS
 }
@@ -26,9 +26,9 @@ const Task = (props:{id:string,callEdit:Function})=>{
     }
     let handleStart = ()=>{
       dispatch({type:EDIT_CHECKOUT_STATE,payload:{taskId:props.id,message:{level:"LOW",state:"started"}}})
-      switch (tasks[props.id].shop){
+      switch (tasks[props.id].shopType){
         case 'shopify':
-          if(!Object.keys(tasks).filter(taskId=>tasks[taskId].isRun&&tasks[taskId].shop=='shopify'==true).length) {
+          if(!Object.keys(tasks).filter(taskId=>tasks[taskId].isRun&&tasks[taskId].shopType=='shopify'==true).length) {
             for (let url of Object.keys(SITES)) new ShopifyMonitor(url).Parse()
           }
           break
@@ -50,10 +50,10 @@ const Task = (props:{id:string,callEdit:Function})=>{
     }
     return(
       <tr className = "" key={props.id}>
-      <td>{tasks[props.id].shop}</td>
+      <td>{tasks[props.id].shopUrl}</td>
       {
         (()=>{
-          switch (tasks[props.id].shop) {
+          switch (tasks[props.id].shopType) {
             case 'shopify':
               return(
                 <td>{'+: ' + tasks[props.id].positive?.join("|")} <br/> {'-: ' + tasks[props.id].negative?.join("|")}</td>

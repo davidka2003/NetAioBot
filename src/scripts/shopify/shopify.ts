@@ -7,7 +7,7 @@ import { ADD_CHECKOUT, ADD_CHECKOUT_BYPASS, EDIT_CHECKOUT_STATE, USE_CHECKOUT_BY
 import { checkForCaptcha } from "./modules";
 import { ipcRenderer } from "electron";
 const cheerio = require('cheerio')
-const { SITES } = require('./shopifyConfig.json');
+import { SITES } from './shopifyConfig.ts';
 const request = require('cloudscraper')
 // request.debug = true
 const getProxy = (proxyProfile:string):string[]=>store.getState().proxy[proxyProfile].proxy
@@ -32,7 +32,7 @@ const Change = changeProxy()
 const getTasks = ():{[key:string]:ShopifyTaskInterface}=>{
     let tasks = store.getState().tasks
     let shopifyTasks = {}
-    Object.keys(tasks).filter(task=>tasks[task].shop=='shopify').forEach(taskId=>shopifyTasks = {...shopifyTasks,[taskId]:tasks[taskId]})
+    Object.keys(tasks).filter(task=>tasks[task].shopType=='shopify').forEach(taskId=>shopifyTasks = {...shopifyTasks,[taskId]:tasks[taskId]})
     return shopifyTasks
 }
 // const getSettings = ()=>store.getState().settings
@@ -198,9 +198,11 @@ export class Checkout{
                     editCheckoutState(this.taskId,{level:"LOW",state:JSON.parse(e.error).description})
                 }
                 else {
-                    console.log(JSON.parse(e.error).description)
-                    /* Dispatch this error */
-                    editCheckoutState(this.taskId,{level:"ERROR",state:JSON.parse(e.error).description})
+                    console.log(e)
+                    // console.log(JSON.parse(e.error).description)
+                    // /* Dispatch this error */
+                    // editCheckoutState(this.taskId,{level:"ERROR",state:JSON.parse(e.error).description})
+                    editCheckoutState(this.taskId,{level:"ERROR",state:"Some error has been occured"})
                     if (getTasks()[this.taskId].retryOnFailure) return this.AddToCart()
                     this.setStop=true
                 }
@@ -508,6 +510,7 @@ export class ShopifyMonitor{
                 let Include = (name:string) => products[item]["title"].toLocaleLowerCase().includes(name);
                 // console.log(products[item].title)
                     for(let task in tasks){
+                        if (tasks[task].shopUrl != this.url) continue
                         // console.log(tasks[task])
                         /* Generating bypass block */
                         // !tasks[task].checkoutsBypass?.[this.url]?tasks[task]?.checkoutsBypass[this.url]={}:null
@@ -594,7 +597,7 @@ export class ShopifyMonitor{
         } catch (error) {
             console.log(error)
         }
-        return setTimeout(this.Parse,5000)
+        return setTimeout(this.Parse,store.getState().settings.monitorsDelay)
     }
 
 }

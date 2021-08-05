@@ -1,5 +1,6 @@
 import { ipcRenderer, remote } from 'electron'
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import React, { ChangeEvent, FormEvent, MouseEvent, useState } from 'react'
+import { WebhookClient, MessageEmbed } from "discord.js"
 import '../../scss/buttons.global.scss'
 import '../../scss/input.global.scss'
 import '../../scss/background.global.scss'
@@ -9,11 +10,13 @@ import { EDIT_SETTINGS } from '../../store/settingsReducer'
 import { Dispatch } from 'redux'
 import { AUTHSERVER } from '../../index'
 import mainLogo from '../../images/logo.svg'
+import { SettingsInterface } from '../../Interfaces/interfaces'
+
 
 
 const Settings = () => {
   const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
-  const settingsStorage = useSelector((state:any)=>state.settings)
+  const settingsStorage:SettingsInterface = useSelector((state:any)=>state.settings)
   const [settings, setSettings] = useState(settingsStorage)
   const logout = ()=>
     fetch(`${AUTHSERVER}/auth/logout`, {
@@ -48,35 +51,68 @@ const Settings = () => {
   }
   const handleChange = (event:ChangeEvent<HTMLInputElement>)=>{
     let currentSettings = {...settings}
-    currentSettings[event.target.id] = event.target.value
-    setSettings(currentSettings)
+    switch (event.target.id) {
+        case "discordWebhook":
+            currentSettings.discordWebhook= event.target.value        
+            break;
+        case "captchaKey":
+            currentSettings.captchaKey= event.target.value        
+            break;
+        case "monitorsDelay":
+            currentSettings.monitorsDelay = parseInt(event.target.value)        
+            break;
+        default:
+            break;
+    }
+    return setSettings(currentSettings)
   }
   const handleSubmit = (event:FormEvent)=>{
     event.preventDefault()
     dispatch({type:EDIT_SETTINGS,payload:{...settings}})
   }
+  const handleTest = (_event:MouseEvent<HTMLButtonElement>)=>{
+    if (!settings.discordWebhook?.length) {
+      return  
+    }
+
+    const embed = new MessageEmbed()
+    embed.addFields(
+      { name: "time", value: `${(new Date(Date.now()) + "").split("GMT")[0]} по мск` })
+      .setThumbnail("https://sun9-28.userapi.com/impg/nPTvNuJPXuxzuDfXCpqTh0y21PEg7reAEg_WuQ/Nv-MnC8JH8M.jpg?size=810x1080&quality=96&sign=1747c278d54626d22ed3776c0985c241&type=album")
+      .setAuthor(`test webhook`)
+      .setFooter("Net Aio bot", "https://sun9-28.userapi.com/impg/nPTvNuJPXuxzuDfXCpqTh0y21PEg7reAEg_WuQ/Nv-MnC8JH8M.jpg?size=810x1080&quality=96&sign=1747c278d54626d22ed3776c0985c241&type=album");
+    new WebhookClient(settings.discordWebhook!.split("webhooks/")[1].split("/")[0], settings.discordWebhook!.split("webhooks/")[1].split("/")[1]).send({embeds:[embed]})
+
+  }
   // dispatch({type:EDIT_TASK,payload:{...edit}})
   return (
       <div className="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
         <div className="lines">
-          <div className="line"></div>
-          <div className="line"></div>
-          <div className="line"></div>
+            <div className="line"></div>
+            <div className="line"></div>
+            <div className="line"></div>
         </div>
         <br />
         <div className="container row">
-          <div className="col-3">
-            <img src={mainLogo} className="rounded" alt="..." />
-          </div>
-          <form onSubmit={handleSubmit} className="col-8">
-            <h2 className="">Settings</h2>
-            <h6 className="">AntiCaptha key</h6>
-            <input onChange={handleChange} value={settings?.captchaKey} className="net_input" type="text"  id="captchaKey" /* required */ />
-            <button type="submit" className="net_button_primary" id="saveSettings">Save</button>
-          </form>
-          <div className="footer">
-            <button onClick={logoutHandler} className="net_button_danger logout_button" id="logout">Logout</button>
-          </div>
+            <div className="col-3">
+                <img src={mainLogo} className="rounded" alt="..." />
+            </div>
+            <form onSubmit={handleSubmit} className="col-8">
+                <h2 className="">Settings</h2>
+                <h6 className="">AntiCaptha key</h6>
+                <input onChange={handleChange} value={settings?.captchaKey} className="net_input" type="text"  id="captchaKey" /* required */ />
+                <h6 className="">Discord webhook</h6>
+                <input onChange={handleChange} value={settings?.discordWebhook} className="net_input col-8 raw-1" type="text"  id="discordWebhook" /* required */ />
+                <button style={{
+                marginLeft:"4.4rem"
+                }} onClick={handleTest} className="net_button_primary raw-1 col" id="testWebhook">test</button>
+                <h6 className="">Monitors delay</h6>
+                <input onChange={handleChange} type="number" min="0" value={settings?.monitorsDelay} className="net_input col raw-2" id="monitorsDelay" /* required */ />
+                <button type="submit" className="net_button_primary raw-3 col" id="saveSettings">Save</button>
+            </form>
+            <div className="footer">
+                <button onClick={logoutHandler} className="net_button_danger logout_button" id="logout">Logout</button>
+            </div>
         </div>
       </div>
     )

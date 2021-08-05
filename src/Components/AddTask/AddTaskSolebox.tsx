@@ -9,7 +9,7 @@ const AddTaskSolebox = () => {
     const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
     const profiles:{[key:string]:ProfileInterface} = useSelector((state:any)=>state.profiles)
     const proxyProfiles = useSelector((state:any)=>state.proxy)
-    const [task, settask] = useState<SoleboxTaskInterface>({isCustomSizes:false,sizes:{},__taskNumber:1,checkoutsAmount:1,isRun:false,retryOnFailure:true,shop:'solebox'})
+    const [task, settask] = useState<SoleboxTaskInterface>({isCustomSizes:false,sizes:{},__taskNumber:1,checkoutsAmount:1,isRun:false,retryOnFailure:true,shopType:'solebox'})
     const handleChange = (event:ChangeEvent<HTMLInputElement&/* | */HTMLSelectElement>)=>{
         let currentTask = {...task}
         switch (event.target.id) {
