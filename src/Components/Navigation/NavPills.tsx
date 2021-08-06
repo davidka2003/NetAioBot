@@ -1,5 +1,6 @@
 import React from 'react'
 import './navPills.global.scss'
+import Noty from 'noty';
 
 const NavPills = ()=>{
     return (

@@ -6,6 +6,8 @@ import { sizes } from './AddTask'
 import { Dispatch } from 'redux'
 import { ADD_SHOPIFY_TASK } from '../../store/tasksReducer'
 
+import { ToastContainer, toast } from 'react-toastify';
+
 const AddTaskShopify = () => {
     const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
     const profiles:{[key:string]:ProfileInterface} = useSelector((state:any)=>state.profiles)
@@ -54,6 +56,14 @@ const AddTaskShopify = () => {
         dispatch({type:ADD_SHOPIFY_TASK,payload:{...task,shop:"shopify",currentCheckoutState:{level:"LOW",state:"not started"}}})
 
     }
+    const notify = () => toast.info('Task was added', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      });
     return (
         <div className="container row">
             <div className="container col-1" />
@@ -142,7 +152,8 @@ const AddTaskShopify = () => {
                             <label htmlFor="retryOnFailure" className="form-label ">Retry on failure</label>
                         </div>
                         <br />
-                        <button className="net_button_primary" id="saveNewTaskButton">Save</button>
+                        <button className="net_button_primary" id="saveNewTaskButton" onClick={notify}>Save</button>
+                        <ToastContainer />
                         <br />
                     </form>
                 </div>

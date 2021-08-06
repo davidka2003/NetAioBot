@@ -9,13 +9,16 @@ import { EDIT_ALL_CHECKOUTS_STATE, EDIT_TASK, REMOVE_ALL_TASKS, RUN_STOP_ALL_TAS
 import { sizes } from '../AddTask/AddTask'
 import Task from './Task'
 import img from '../../images/logo.svg'
+
+
+
 const {SITES} = require('../../scripts/shopify/shopifyConfig.json')
 const Tasks = () => {
   const dispatch = useDispatch()
   const tasks = useSelector((state:any)=>state.tasks)
   const proxyProfiles = useSelector((state:any)=>state.proxy)
   const profiles = useSelector((state:any)=>state.profiles)
-  
+
   const [edit, setedit] = useState<ShopifyTaskInterface|SoleboxTaskInterface>({isCustomSizes:false,__taskNumber:1,sizes:{},isRun:false,retryOnFailure:false,checkoutsAmount:1,shop:'shopify'})
   const editTask = (id:string)=>{
     setedit({...tasks}[id])
@@ -47,7 +50,7 @@ const Tasks = () => {
         break
       case "proxyProfile":
         currentTask.proxyProfile=event.target.value
-        break  
+        break
       case "retryOnFailure":
         currentTask.retryOnFailure = event.target.checked
         break
@@ -98,7 +101,7 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
             </thead>
             <tbody id = 'tasksTable'>
               {
-                
+
                 Object.keys(tasks)?.map((id:string)=>{
                   return (<Task id={id} key={id} callEdit={editTask}/>)
                 })
@@ -140,7 +143,7 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                               <input onChange={changeHandler} value={edit.negative?.join("|")} type="text" className="form-control" id="negative" required />
                             </div>
                           </div>
-        
+
                           )
                         case "solebox":
                           return(
@@ -150,7 +153,7 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                               <input onChange={changeHandler} value={edit.url} type="text" className="form-control" id="url" required />
                             </div>
                           </div>
-        
+
                           )
                         default:
                           return
