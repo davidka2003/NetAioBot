@@ -12,6 +12,7 @@ import { AUTHSERVER } from '../../index'
 import mainLogo from '../../images/logo.svg'
 import { SettingsInterface } from '../../Interfaces/interfaces'
 
+import Noty from 'noty';
 
 
 const Settings = () => {
@@ -90,6 +91,11 @@ const Settings = () => {
 
   }
   // dispatch({type:EDIT_TASK,payload:{...edit}})
+
+  // new Noty({
+  //   text: 'хуй',
+  // }).show();
+  
   return (
       <div className="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
         <div className="lines">

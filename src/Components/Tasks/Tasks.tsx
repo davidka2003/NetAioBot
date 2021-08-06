@@ -58,7 +58,7 @@ const Tasks = () => {
         break
       case "proxyProfile":
         currentTask.proxyProfile=event.target.value
-        break  
+        break
       case "retryOnFailure":
         currentTask.retryOnFailure = event.target.checked
         break
@@ -112,6 +112,10 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
             </thead>
             <tbody id = 'tasksTable'>
               {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9365023423d73cbfab38422012f1f43a2b588649
                 Object.keys(tasks)?.map((id:string)=>{
                   return (<Task id={id} key={id} callEdit={editTask}/>)
                 })
@@ -169,7 +173,7 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                                 required
                                 />
                           </div>
-        
+
                           )
                         case "solebox":
                           return(
@@ -179,7 +183,7 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                               <input onChange={handleChange} value={edit.url} type="text" className="form-control" id="url" required />
                             </div>
                           </div>
-        
+
                           )
                         default:
                           return

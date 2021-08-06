@@ -5,6 +5,7 @@ import React, { ChangeEvent, FormEvent, useEffect,useState } from 'react'
 import '../Login/login.global.scss'
 import mainLogo from '../../images/logo.svg'
 import { AUTHSERVER } from '../../index'
+import Noty from 'noty';
 
 const Login = () => {
     const [key, setkey] = useState(localStorage.getItem("key")||'')
