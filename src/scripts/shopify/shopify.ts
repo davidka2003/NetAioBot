@@ -486,7 +486,7 @@ export class Checkout{
                   { name: "time", value: `${(new Date(Date.now()) + "").split("GMT")[0]} по мск` },
                   {name:"shop",value:this.url},
                   {name:"item",value:this.title},
-                  {name:"checkout in:",value:Date.now()-this._timeA},)
+                  {name:"checkout in:",value:`${Date.now()-this._timeA} ms`},)
                   .setThumbnail(this.image||"https://sun9-28.userapi.com/impg/nPTvNuJPXuxzuDfXCpqTh0y21PEg7reAEg_WuQ/Nv-MnC8JH8M.jpg?size=810x1080&quality=96&sign=1747c278d54626d22ed3776c0985c241&type=album")
                   .setAuthor(`success`)
                   .setFooter("Net Aio bot", "https://sun9-28.userapi.com/impg/nPTvNuJPXuxzuDfXCpqTh0y21PEg7reAEg_WuQ/Nv-MnC8JH8M.jpg?size=810x1080&quality=96&sign=1747c278d54626d22ed3776c0985c241&type=album");

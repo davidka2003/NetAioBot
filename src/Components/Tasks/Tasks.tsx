@@ -112,10 +112,6 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
             </thead>
             <tbody id = 'tasksTable'>
               {
-<<<<<<< HEAD
-=======
-
->>>>>>> 9365023423d73cbfab38422012f1f43a2b588649
                 Object.keys(tasks)?.map((id:string)=>{
                   return (<Task id={id} key={id} callEdit={editTask}/>)
                 })
