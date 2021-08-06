@@ -11,48 +11,49 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, autoUpdater ,ipcMain, shell,dialog,Notification } from 'electron';
-// import { autoUpdater } from 'electron-updater';
+import { app, BrowserWindow, /* autoUpdater , */ipcMain, shell,dialog,Notification } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-// const fetch = require('node-fetch')
 let KEY = ''
-const server = 'https://your-deployment-url.com'
-const url = `${server}/update/${process.platform}/${app.getVersion()}`
+// const fetch = require('node-fetch')
+// const server = 'https://your-deployment-url.com'
+// const url = `${server}/update/${process.platform}/${app.getVersion()}`
 
-autoUpdater.setFeedURL({ url })
-
-
-setInterval(() => {
-  autoUpdater.checkForUpdates()
-}, 600000)
-
-autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Application Update',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
-    detail: 'A new version has been downloaded. Restart the application to apply the updates.'
-  }
-
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall()
-  })
-})
-autoUpdater.on('error', message => {
-  console.error('There was a problem updating the application')
-  console.error(message)
-})
+// autoUpdater.setFeedURL({ url })
 
 
-// export default class AppUpdater {
-//   constructor() {
-//     log.transports.file.level = 'info';
-//     autoUpdater.logger = log;
-//     autoUpdater.checkForUpdatesAndNotify();
+// setInterval(() => {
+//   autoUpdater.checkForUpdates()
+// }, 600000)
+
+// autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+//   const dialogOpts = {
+//     type: 'info',
+//     buttons: ['Restart', 'Later'],
+//     title: 'Application Update',
+//     message: process.platform === 'win32' ? releaseNotes : releaseName,
+//     detail: 'A new version has been downloaded. Restart the application to apply the updates.'
 //   }
-// }
+
+//   dialog.showMessageBox(dialogOpts).then((returnValue) => {
+//     if (returnValue.response === 0) autoUpdater.quitAndInstall()
+//   })
+// })
+// autoUpdater.on('error', message => {
+//   console.error('There was a problem updating the application')
+//   console.error(message)
+// })
+
+export default class AppUpdater {
+  constructor() {
+    log.transports.file.level = 'info';
+    console.log(autoUpdater.getFeedURL())
+    console.log(autoUpdater.updateConfigPath)
+    autoUpdater.logger = log;
+    autoUpdater.checkForUpdatesAndNotify();
+  }
+}
 
 let mainWindow: BrowserWindow | null = null;
 let loginWindow: BrowserWindow | null = null;
@@ -140,7 +141,6 @@ const createMainWindow = async () => {
   });
 
   mainWindow.loadURL(`file://${__dirname}/index.html?viewMain`);
-
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', () => {
@@ -156,22 +156,25 @@ const createMainWindow = async () => {
     // mainWindow.hide()
   });
   mainWindow.on('ready-to-show',()=>{
+    new AppUpdater()
     if(loginWindow)loginWindow.close()
   })/* added */
-  mainWindow.on('closed',(event:Electron.Event)=>{
+  mainWindow.on('closed',(_event:Electron.Event)=>{
     mainWindow=null
     !loginWindow?_logoutWindow?.webContents.send('onCloseLogout'):null
     // Logout()
   })
+  
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
+  new AppUpdater()
 
   // Open urls in the user's browser
   mainWindow.webContents.on('new-window', (event, url) => {
     event.preventDefault();
     shell.openExternal(url);
   });
-
+  
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   // new AppUpdater();
@@ -273,7 +276,7 @@ ipcMain.on('deleteKey',()=>KEY = '')
 ipcMain.on('login',()=>{createMainWindow();/* if(loginWindow)loginWindow.close(); */})
 ipcMain.on('logout',()=>{createLoginWindow()/* ;if(mainWindow)mainWindow.close() */;})
 ipcMain.on('onCloseLogoutSuccess',app.quit)
-ipcMain.on('notify',(event,type:Electron.NotificationConstructorOptions)=>{
+ipcMain.on('notify',(_event,type:Electron.NotificationConstructorOptions)=>{
     return new Notification(type).show()
   }
 )

@@ -1,5 +1,4 @@
 import { ipcRenderer } from 'electron'
-import { Notification } from 'electron'
 import React, { ChangeEvent, FormEvent } from 'react'
 import {useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,8 +7,8 @@ import { ShopifyMonitor } from '../../scripts/shopify/shopify'
 import { EDIT_ALL_CHECKOUTS_STATE, EDIT_TASK, REMOVE_ALL_TASKS, RUN_STOP_ALL_TASKS } from '../../store/tasksReducer'
 import { sizes } from '../AddTask/AddTask'
 import Task from './Task'
-import img from '../../images/logo.svg'
-import { SITES } from '../../scripts/shopify/shopifyConfig.ts'
+import { SITES } from '../../scripts/shopify/shopifyConfig'
+import Select from 'react-select'
 const Tasks = () => {
   const dispatch = useDispatch()
   const tasks = useSelector((state:any)=>state.tasks)
@@ -17,6 +16,18 @@ const Tasks = () => {
   const profiles = useSelector((state:any)=>state.profiles)
   
   const [edit, setedit] = useState<ShopifyTaskInterface|SoleboxTaskInterface>({isCustomSizes:false,__taskNumber:1,sizes:{},isRun:false,retryOnFailure:false,checkoutsAmount:1,shopType:'shopify'})
+  const siteOptions = Object.keys(SITES).map(site=>{
+    return{
+        value:site,
+        label:site?.replace(/https:\/\/|https:\/\/|\/|www./g,"")
+    }
+  })
+  const handleSiteSelect = (event:{value:string,label:string})=>{
+    let currentTask = {...edit}
+    currentTask.shopUrl = event.value
+    setedit(currentTask)
+  }
+
   const editTask = (id:string)=>{
     setedit({...tasks}[id])
 
@@ -142,15 +153,21 @@ dispatch({type:RUN_STOP_ALL_TASKS,payload:{isRun:true}})
                               <input onChange={handleChange} value={edit.negative?.join("|")} type="text" className="form-control" id="negative" required />
                             </div>
                             <h5>Site</h5>
-                            <select style={{
-                              width:"80%",
-                              marginLeft:"12px"
-                            }} value={edit?.shopUrl} onChange={handleChange} className="form-select" id="shopUrl" required={true}>
-                                <option value="">Select...</option>
-                                {
-                                    Object.keys(SITES).sort((a, b) => a.localeCompare(b)).map(site=><option key={site}>{/* site.replace(/https:\/\/|https:\/\/|\//g,"") */site}</option>)
-                                }
-                            </select>
+                            <Select
+                                classNamePrefix="select"
+                                defaultValue={siteOptions[0]}
+                                onChange={handleSiteSelect}
+                                className="net_select" 
+                                id="shopUrl"
+                                value={{
+                                    value:edit.shopUrl,
+                                    label:edit.shopUrl?.replace(/https:\/\/|https:\/\/|\/|www./g,"")
+                                }}
+                                isSearchable={true}
+                                name="color"
+                                options={siteOptions}
+                                required
+                                />
                           </div>
         
                           )

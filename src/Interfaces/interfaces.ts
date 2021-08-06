@@ -44,7 +44,7 @@ export interface ShopifyTaskInterface{
     retryOnFailure:boolean,
     checkoutsAmount:1|number,
     shopType:"shopify",
-    shopUrl?:string
+    shopUrl:string
     proxyProfile?:string
 }
 

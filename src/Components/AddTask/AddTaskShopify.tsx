@@ -1,4 +1,5 @@
 import React, { ChangeEvent, FormEvent } from 'react'
+import Select from 'react-select'
 import {useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ProfileInterface, ShopifyTaskInterface } from '../../Interfaces/interfaces'
@@ -11,7 +12,13 @@ const AddTaskShopify = () => {
     const dispatch:(arg:{type:string,payload:any})=>Dispatch<typeof arg> = useDispatch()
     const profiles:{[key:string]:ProfileInterface} = useSelector((state:any)=>state.profiles)
     const proxyProfiles = useSelector((state:any)=>state.proxy)
-    const [task, settask] = useState<ShopifyTaskInterface>({isCustomSizes:false,sizes:{},__taskNumber:1,checkoutsAmount:1,isRun:false,retryOnFailure:true,shopType:"shopify"})
+    const [task, settask] = useState<ShopifyTaskInterface>({isCustomSizes:false,sizes:{},__taskNumber:1,checkoutsAmount:1,isRun:false,retryOnFailure:true,shopType:"shopify",shopUrl:Object.keys(SITES)[0]})
+    const siteOptions = Object.keys(SITES).map(site=>{
+        return{
+            value:site,
+            label:site.replace(/https:\/\/|https:\/\/|\/|www./g,"")
+        }
+    })
     const handleChange = (event:ChangeEvent<HTMLInputElement&/* | */HTMLSelectElement>)=>{
         let currentTask = {...task}
         switch (event.target.id) {
@@ -51,6 +58,11 @@ const AddTaskShopify = () => {
                 break;
         }
         console.log(currentTask)
+        settask(currentTask)
+    }
+    const handleSiteSelect = (event:{value:string,label:string})=>{
+        let currentTask = {...task}
+        currentTask.shopUrl = event.value
         settask(currentTask)
     }
     const handleCreate = (event:FormEvent<HTMLFormElement>)=>{
@@ -126,14 +138,23 @@ const AddTaskShopify = () => {
                                 <option>24/7</option>
                             </select>
                         </div>
-                        <div className="col-4">
+                        <div className="col">{/* edited to normal dropdown search sizes */}
                             <label htmlFor="shopUrl" className="form-label ">Site</label>
-                            <select value={task?.shopUrl} onChange={handleChange} className="net_select" id="shopUrl" required={true}>
-                                <option value="">Select...</option>
-                                {
-                                    Object.keys(SITES).sort((a, b) => a.localeCompare(b)).map(site=><option key={site}>{/* site.replace(/https:\/\/|https:\/\/|\//g,"") */site}</option>)
-                                }
-                            </select>
+                            <Select
+                                classNamePrefix="select"
+                                defaultValue={siteOptions[0]}
+                                onChange={handleSiteSelect}
+                                className="net_select" 
+                                id="shopUrl"
+                                value={{
+                                    value:task.shopUrl,
+                                    label:task.shopUrl.replace(/https:\/\/|https:\/\/|\/|www./g,"")
+                                }}
+                                isSearchable={true}
+                                name="color"
+                                options={siteOptions}
+                                required
+                                />
                         </div>
                         <div className="col-4">
                             <label htmlFor="proxyProfile" className="form-label ">Proxy</label>

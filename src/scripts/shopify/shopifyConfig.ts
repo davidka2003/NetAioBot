@@ -1,9 +1,13 @@
 export const SITES:{[site:string]:{
     checkoutGateway:number,
-    extraHeaders:any,
-    available:boolean,
-    special:any
-}} = {        
+    extraHeaders?:any,
+    available?:boolean,
+    special?:any
+}} = {  "https://www.shoepalace.com":{
+    "checkoutGateway":39578599470,
+
+    },
+          
         "https://nrml.ca":{
             "extraHeaders":{
                 "checkout[pick_up_in_store][selected]":false,
