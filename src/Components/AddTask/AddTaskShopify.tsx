@@ -79,7 +79,7 @@ const AddTaskShopify = () => {
       closeOnClick: true,
       pauseOnHover: false,
       draggable: true,
-      });
+    });
     return (
         <div className="container row">
             <div className="container col-1" />
@@ -154,7 +154,7 @@ const AddTaskShopify = () => {
                                 classNamePrefix="select"
                                 defaultValue={siteOptions[0]}
                                 onChange={handleSiteSelect}
-                                className="net_select" 
+                                className="net_select"
                                 id="shopUrl"
                                 value={{
                                     value:task.shopUrl,

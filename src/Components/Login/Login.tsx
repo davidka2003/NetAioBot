@@ -5,9 +5,18 @@ import React, { ChangeEvent, FormEvent, useEffect,useState } from 'react'
 import '../Login/login.global.scss'
 import mainLogo from '../../images/logo.svg'
 import { AUTHSERVER } from '../../index'
-import Noty from 'noty';
+
+import { ToastContainer, toast } from 'react-toastify';
 
 const Login = () => {
+    const notify = () => toast.error('Failed to log in', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+    });
     const [key, setkey] = useState(localStorage.getItem("key")||'')
     const [dis, setdis] = useState(false)
     // let windows = remote.BrowserWindow.getAllWindows()
@@ -41,6 +50,7 @@ const Login = () => {
         }
         else {
           setdis(false)
+          notify()
           throw new Error("Failed to log in")
         }
     }).catch((e:any)=>console.log(e))
@@ -63,6 +73,7 @@ const Login = () => {
                 </div>
               </div>
             </form>
+            <ToastContainer />
         </div>
     )
 }

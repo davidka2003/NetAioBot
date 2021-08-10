@@ -9,6 +9,8 @@ import Calendar from './Components/Calendar/Calendar'
 import Settings from './Components/Settings/Settings'
 import { Provider } from 'react-redux'
 import { store } from './store'
+import Raffles from './Components/Raffles/Raffles'
+import Accounts from './Components/Accounts/Accounts'
 
 let App = ()=>{
     return (
@@ -32,6 +34,8 @@ let App = ()=>{
             <div className="tab-content col-10" id="v-pills-tabContent">
                 <Tasks/>
                 <AddTask/>
+                <Raffles/>
+                <Accounts/>
                 <Profiles/>
                 <Proxy/>
                 <Calendar/>
