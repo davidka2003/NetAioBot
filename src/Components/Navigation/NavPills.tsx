@@ -111,6 +111,10 @@ const NavPills = ()=>{
         <a className="net_nav_pills" id="v-pills-raffles-tab" data-bs-toggle="pill" href="#v-pills-raffles" role="tab" aria-controls="v-pills-raffles" aria-selected="false">
            Raffles
         </a>
+        <a className="net_nav_pills" id="v-pills-addraffle-tab" data-bs-toggle="pill" href="#v-pills-addraffle" role="tab" aria-controls="v-pills-addraffle" aria-selected="false">
+           Create raffle
+        </a>
+
 
         <a className="net_nav_pills" id="v-pills-profiles-tab" data-bs-toggle="pill" href="#v-pills-profiles" role="tab" aria-controls="v-pills-profiles" aria-selected="false">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person" viewBox="0 0 16 16">

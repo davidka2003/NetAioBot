@@ -11,6 +11,7 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import Raffles from './Components/Raffles/Raffles'
 import Accounts from './Components/Accounts/Accounts'
+import AddRaffle from './Components/AddRaffle/AddRaffle';
 
 let App = ()=>{
     return (
@@ -35,6 +36,7 @@ let App = ()=>{
                 <Tasks/>
                 <AddTask/>
                 <Raffles/>
+                <AddRaffle/>
                 <Accounts/>
                 <Profiles/>
                 <Proxy/>

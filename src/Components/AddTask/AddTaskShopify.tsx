@@ -70,6 +70,7 @@ const AddTaskShopify = () => {
     const handleCreate = (event:FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
         dispatch({type:ADD_SHOPIFY_TASK,payload:{...task,shop:"shopify",currentCheckoutState:{level:"LOW",state:"not started"}}})
+        notify()
 
     }
     const notify = () => toast.info('Task was added', {
@@ -109,7 +110,7 @@ const AddTaskShopify = () => {
                                     sizes?.map((size:string,index)=>{
                                         return (
                                             <div className="form-check" key={index}>
-                                            <input className="form-check-input" onChange={handleChange} checked = {task.sizes[size]?.checked} id={size} name="sizes" type="checkbox" />
+                                            <input className="form-check-input" onChange={handleChange} checked = {task.sizes[size]} id={size} name="sizes" type="checkbox" />
                                             <label className="form-check-label" htmlFor={size +'us'}>
                                                 {size} us
                                             </label>
@@ -186,7 +187,7 @@ const AddTaskShopify = () => {
                             <label htmlFor="retryOnFailure" className="form-label ">Retry on failure</label>
                         </div>
                         <br />
-                        <button className="net_button_primary" id="saveNewTaskButton" onClick={notify}>Save</button>
+                        <button className="net_button_primary" id="saveNewTaskButton" >Save</button>
                         <ToastContainer />
                         <br />
                     </form>

@@ -3,6 +3,7 @@
 import { BypassQueueLink, Checkout } from "../scripts/shopify/shopify";
 import { SoleboxCheckout } from "../scripts/solebox/solebox";
 import { SITES } from "../scripts/shopify/shopifyConfig";
+import { TravisRaffle } from "../scripts/raffles/travis";
 export interface ActionInterface{
     type:string,
     payload:any
@@ -92,6 +93,28 @@ export interface ProfileInterface{
     cvv:string,
     phone:string,
 }/* Removed ? */
+export interface RaffleTaskInterface{
+    isCustomSizes?:boolean,
+    sizes?:{
+        [size:string]:boolean
+    },
+    __taskNumber?:number,
+    profile?:string,
+    accountProfile?:string,
+    checked?:boolean,
+    id?:string,
+    task?:TravisRaffle
+    status?:{
+        success:number,
+        fail:number
+    }
+    isRun?:boolean,
+    shopType:"travis",
+    proxyProfile?:string,
+    delay:number
+}
+
+
 export interface SettingsInterface{
     captchaKey?:string,
     discordWebhook?:string,
