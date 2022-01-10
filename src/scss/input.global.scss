@@ -1,7 +1,8 @@
 $default_border_radius: 13px;
 
-$primary_color: #00b8d4;
-$primary_color_dark: #0088a3;
+// $primary_color: #00b8d4;
+$primary_color: #6998d0;
+$primary_color_dark: #638ec4;
 $primary_input_background_color: #6E6E6E;
 
 
@@ -9,7 +10,7 @@ $primary_input_background_color: #6E6E6E;
   outline: none;
   border-radius: $default_border_radius;
   color: $primary_color_dark;
-  border: 2px solid $primary_input_background_color;
+  border: 2px solid transparent;
   padding: 8px 20px;
   text-decoration: none;
   transition: all 0.7s ease;
@@ -22,7 +23,7 @@ $primary_input_background_color: #6E6E6E;
 .net_select{
   border-radius: $default_border_radius;
   color: $primary_color;
-  border: 2px solid $primary_input_background_color;
+  border: 2px solid transparent;
   padding: 8px 20px;
   width: 100%;
   outline: none;
@@ -46,7 +47,7 @@ $primary_input_background_color: #6E6E6E;
   width: 16px;
   height: 16px;
 
-  border: 2px solid $primary_color;
+  border: 2px solid transparent;
   transition: 0.2s all linear;
   margin-right: 5px;
   margin-left: 0;
@@ -71,7 +72,7 @@ $primary_input_background_color: #6E6E6E;
   width: 16px;
   height: 16px;
 
-  border: 2px solid $primary_input_background_color;
+  border: 2px solid transparent;
   transition: 0.1s all linear;
   margin-right: 5px;
   margin-left: 0;

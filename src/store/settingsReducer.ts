@@ -1,16 +1,27 @@
-import { ActionType } from "."
+import { ActionType } from '.';
+import { SettingsInterface } from '../Interfaces/interfaces';
 
-export const EDIT_KEY = "EDIT_KEY"
-export const EDIT_SETTINGS = "EDIT_SETTINGS"
-const defaultState = JSON.parse(localStorage.getItem('settings')!)||{}
-export const settingsReducer = (state = defaultState ,action:ActionType)=>{
-    let currentState
-    switch (action.type){
-        case EDIT_SETTINGS:
-            currentState = {...state,...action.payload}
-            localStorage.setItem("settings",JSON.stringify(currentState))
-            return currentState
-        default:
-            return state
-    }
-}
+export const EDIT_KEY = 'EDIT_KEY';
+export const EDIT_SETTINGS = 'EDIT_SETTINGS';
+const defaultState =
+  <SettingsInterface>JSON.parse(localStorage.getItem('settings')!) || {};
+export const settingsReducer = (
+  state = defaultState,
+  action: ReturnType<typeof SettingsDispatcher>
+) => {
+  let currentState: typeof state;
+  switch (action.type) {
+    case EDIT_SETTINGS:
+      currentState = { ...state, ...action.payload };
+      localStorage.setItem('settings', JSON.stringify(currentState));
+      return currentState;
+    default:
+      return state;
+  }
+};
+export const SettingsDispatcher = (
+  type: 'EDIT_KEY' | 'EDIT_SETTINGS',
+  payload: {}
+) => {
+  return { type, payload };
+};
